@@ -9,7 +9,8 @@ interface ICustomerState {
     selectedCustomers: TCustomer[] | null,
     selectCustomers: (customerId: string) => void,
     unselectCustomers: (customerId: string) => void,
-    leaveSelectedCustomers: () => void
+    leaveSelectedCustomers: () => void,
+    deleteCustomers: (customerIds: string[]) => void,
 }
 
 const useCustomerStore = create<ICustomerState>((set) => ({
@@ -17,6 +18,7 @@ const useCustomerStore = create<ICustomerState>((set) => ({
     deleteButtonText: "Müşteriyi Sil",
     selectedCustomersCount: 0,
     selectedCustomers: [],
+
     selectCustomers: (customerId: string) => set((state: ICustomerState) =>
     {
         if(state.selectedCustomersCount > 0){
@@ -47,6 +49,13 @@ const useCustomerStore = create<ICustomerState>((set) => ({
             selectedCustomersCount: 0,
             selectedCustomers: []
         })),
+
+    deleteCustomers: (customerIds: string[]) => set((state:ICustomerState) => {
+        const newCustomerList = state.customerList?.filter((customer: TCustomer) => customerIds.filter(customerId => customerId !== customer.customerId))
+        return {
+            customerList: newCustomerList
+        }
+    })
 }))
 
 export {

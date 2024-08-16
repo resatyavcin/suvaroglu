@@ -74,6 +74,7 @@ const CustomerTable = ({isOpen}:any) => {
                 {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                         <TableRow
+                            className={"select-none"}
                             {...attrs}
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
@@ -94,7 +95,7 @@ const CustomerTable = ({isOpen}:any) => {
                             colSpan={columns.length}
                             className="h-24 text-center"
                         >
-                            No results.
+                            Sonuç bulunamadı.
                         </TableCell>
                     </TableRow>
                 )}

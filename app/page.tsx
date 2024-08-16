@@ -12,11 +12,12 @@ import { IoTrash } from "react-icons/io5";
 import { IoCloudDownload } from "react-icons/io5";
 import { IoShareSocial } from "react-icons/io5";
 import { useClickAway } from "@uidotdev/usehooks";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import {CustomerAlertDialog} from "@/components/customer/customer-alert";
 
 export default function Home() {
-    const { selectedCustomersCount } = useCustomerStore();
-
+    const { selectedCustomersCount,selectedCustomers, deleteCustomers } = useCustomerStore();
+    const [isOpenAlertDialogComponent, setIsOpenAlertDialogComponent] = useState(false)
     const [isOpen, setIsOpen] = React.useState(false);
     const ref:any = useClickAway(() => {
         setIsOpen(true);
@@ -28,12 +29,21 @@ export default function Home() {
 
     return (
       <Drawer>
+          <CustomerAlertDialog
+              title={"Emin misin?"}
+              description={"Seçtiğiniz kayıtlar silinecektir. Geri alnımaz. Silmek istediğinizden emin misiniz?"}
+              okText={"Kalıcı olarak sil"}
+              cancelText={"Vazgeç"}
+              onApprove={()=>{setIsOpenAlertDialogComponent(false)}}
+              onCancel={()=>{setIsOpenAlertDialogComponent(false)}}
+              isOpen={isOpenAlertDialogComponent}
+          />
           <div className="w-full">
               <div className={"mb-3 mr-3"}>
                   {
                       selectedCustomersCount > 0 &&
                       <div className={"gap-x-1.5 flex items-center justify-end w-full"}>
-                          <Button variant={"default"}>
+                          <Button variant={"default"} onClick={()=>setIsOpenAlertDialogComponent(true)}>
                               <IoTrash className="w-4 h-4"/>
                           </Button>
 
