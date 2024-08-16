@@ -1,0 +1,18 @@
+{
+  "db": [
+    {
+      "customerId": "AKEGTD45345",
+      "customerName": "Şükrü",
+      "customerSurname": "Sarı",
+      "customerVehicle": "Hundai i20",
+      "customerVehicleKM": 10220
+    },
+    {
+      "customerId": "AKEGTD4534d35",
+      "customerName": "Erdem",
+      "customerSurname": "Koru",
+      "customerVehicle": "Mayback",
+      "customerVehicleKM": 102203
+    }
+  ]
+}

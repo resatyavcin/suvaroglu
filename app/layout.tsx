@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-
+import {cn} from "@/lib/utils";
+import { FaCarAlt } from "react-icons/fa";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -16,7 +17,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={cn(inter.className)}>
+          <div className="flex flex-col items-center justify-center my-4 mx-auto">
+              <FaCarAlt className="text-emerald-800 w-6 h-6" />
+              <h2 className="font-extrabold text-2xl text-emerald-500">Suvaroglu</h2>
+          </div>
+        {children}
+      </body>
     </html>
   );
 }
