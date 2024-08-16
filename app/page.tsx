@@ -18,14 +18,13 @@ export default function Home() {
     const { selectedCustomersCount } = useCustomerStore();
 
     const [isOpen, setIsOpen] = React.useState(false);
-    const ref = useClickAway(() => {
+    const ref:any = useClickAway(() => {
         setIsOpen(true);
     });
 
     useEffect(() => {
         setIsOpen(false)
     }, [isOpen]);
-
 
     return (
       <Drawer>
@@ -48,7 +47,7 @@ export default function Home() {
                       </div>
                   }
               </div>
-              <div className="rounded-md border" ref={ref}>
+              <div ref={ref} className="rounded-md border">
                   <CustomerTable isOpen={isOpen} />
               </div>
           </div>
