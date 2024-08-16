@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
 import {columns} from "@/components/customer/customer-columns";
@@ -14,14 +14,12 @@ import {
     getSortedRowModel, SortingState,
     useReactTable, VisibilityState,
 } from "@tanstack/react-table"
-import {TCustomer} from "@/constants";
+import {useCustomerStore} from "@/store";
+import { useLongPress } from "@uidotdev/usehooks";
 
-interface CustomerTableProps {
-    data: TCustomer[]
-}
 
-const CustomerTable = ({ data }: CustomerTableProps) => {
-
+const CustomerTable = ({isOpen}:any) => {
+    const { customerList, selectedCustomersCount } = useCustomerStore();
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
@@ -30,10 +28,24 @@ const CustomerTable = ({ data }: CustomerTableProps) => {
         useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState({})
 
+    const { selectCustomers, unselectCustomers } = useCustomerStore();
+
+    const [isSelectable, setIsSelectable] = useState<boolean>(false);
+    const attrs = useLongPress(
+        () => {
+            setIsSelectable(true);
+        },
+        {
+            onStart: (event) => console.log("Press started"),
+            onFinish: (event) => console.log("Press Finished"),
+            onCancel: (event) => console.log("Press cancelled"),
+            threshold: 500,
+        }
+    );
 
     const table = useReactTable({
-        data,
-        columns,
+        data: customerList,
+        columns: columns(selectCustomers, unselectCustomers,isSelectable, selectedCustomersCount),
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
@@ -50,12 +62,19 @@ const CustomerTable = ({ data }: CustomerTableProps) => {
         },
     })
 
+    useEffect(() => {
+        if(isOpen && selectedCustomersCount === 0){
+            setIsSelectable(false)
+        }
+    }, [isOpen]);
+
     return (
         <Table>
             <TableBody>
                 {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                         <TableRow
+                            {...attrs}
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
                         >
