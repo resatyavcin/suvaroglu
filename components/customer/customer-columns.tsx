@@ -22,6 +22,7 @@ export const columns: TCustomerColumn = (selectCustomers, unselectCustomers, isS
                             checked={row.getIsSelected()}
                             onCheckedChange={(value) => {
                                 row.toggleSelected(!!value)
+
                                 if (value) {
                                     selectCustomers(row.original.customerId)
                                     return;

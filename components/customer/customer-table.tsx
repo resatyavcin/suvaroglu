@@ -19,7 +19,7 @@ import { useLongPress } from "@uidotdev/usehooks";
 
 
 const CustomerTable = ({isOpen}:any) => {
-    const { customerList, selectedCustomersCount } = useCustomerStore();
+    const { customerList, selectedCustomersCount, setIsSelectableCustomers, isSelectableCustomers } = useCustomerStore();
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
@@ -30,10 +30,9 @@ const CustomerTable = ({isOpen}:any) => {
 
     const { selectCustomers, unselectCustomers } = useCustomerStore();
 
-    const [isSelectable, setIsSelectable] = useState<boolean>(false);
     const attrs = useLongPress(
         () => {
-            setIsSelectable(true);
+            setIsSelectableCustomers(true);
         },
         {
             onStart: (event) => console.log("Press started"),
@@ -45,7 +44,7 @@ const CustomerTable = ({isOpen}:any) => {
 
     const table = useReactTable({
         data: customerList,
-        columns: columns(selectCustomers, unselectCustomers,isSelectable, selectedCustomersCount),
+        columns: columns(selectCustomers, unselectCustomers, isSelectableCustomers, selectedCustomersCount),
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
@@ -64,7 +63,7 @@ const CustomerTable = ({isOpen}:any) => {
 
     useEffect(() => {
         if(isOpen && selectedCustomersCount === 0){
-            setIsSelectable(false)
+            setIsSelectableCustomers(false)
         }
     }, [isOpen]);
 
@@ -74,10 +73,10 @@ const CustomerTable = ({isOpen}:any) => {
                 {table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                         <TableRow
-                            className={"select-none"}
                             {...attrs}
                             key={row.id}
                             data-state={row.getIsSelected() && "selected"}
+                            className="custom-no-select"
                         >
                             {row.getVisibleCells().map((cell) => (
                                 <TableCell key={cell.id}>
