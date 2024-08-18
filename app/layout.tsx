@@ -20,15 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className)}>
-          <div className="flex items-center justify-between h-full my-2 mx-5">
-              <div className="flex items-center gap-x-1.5">
-                  <FaCarAlt className="text-emerald-800 w-6 h-6" />
-                  <h2 className="font-extrabold text-2xl text-emerald-500">Suvaroglu</h2>
-              </div>
-
-              <CustomerActions />
+          <div vaul-drawer-wrapper="" className="bg-white min-h-[100vh]">
+              {children}
           </div>
-        {children}
       </body>
     </html>
   );

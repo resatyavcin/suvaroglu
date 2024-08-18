@@ -91,7 +91,8 @@ const useCustomerStore = create<ICustomerState>((set) => ({
         return {
             customerList: newCustomerList,
             selectedCustomers: [],
-            isSelectableCustomers: false
+            isSelectableCustomers: false,
+            isViewActionButtons: false
         }
     })
 }))

@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  background: white;
+}
+
+
 .custom-no-select {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none; /* Safari, Chrome, Opera, Samsung */
@@ -10,6 +15,7 @@
   -ms-user-select: none; /* Edge, IE */
   user-select: none; /* Modern browsers */
 }
+
 
 @layer base {
   :root {
