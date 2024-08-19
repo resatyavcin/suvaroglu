@@ -29,7 +29,7 @@ export default function RootLayout({
           <title>Suvaroglu</title>
       </head>
       <body className={cn(inter.className)}>
-      <div vaul-drawer-wrapper="" className="bg-white min-h-[100vh]">
+      <div className="bg-white min-h-[100vh]">
           {children}
       </div>
       </body>

@@ -22,7 +22,10 @@ export const serviceAdd = async (values: z.infer<typeof CustomerVehicleServiceAd
     try {
 
         const fileMetadata = {
-            name:  values.customerName + " " + values.customerSurname,
+            name: values.customerName + "/"
+                +values.customerSurname + "/"
+                +values.customerVehicle + "/"
+                +values.customerVehicleKM,
             mimeType: 'application/vnd.google-apps.folder',
         };
 
@@ -34,20 +37,7 @@ export const serviceAdd = async (values: z.infer<typeof CustomerVehicleServiceAd
         await driveService.files.create({
             requestBody: fileMetadata,
             fields: 'id',
-        }).then(async ({data})=>{
-
-            if(data.id){
-                await driveService.files.create({
-                    requestBody: {
-                        name:  values.customerVehicle + "-" + values.customerVehicleKM,
-                        mimeType: 'application/vnd.google-apps.folder',
-                        parents: [data.id]
-                    },
-                    fields: 'id',
-                })
-            }
         })
-
 
         return { success: "Araç Dosyası oluşturuldu." }
     } catch (err) {

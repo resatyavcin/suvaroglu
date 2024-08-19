@@ -8,6 +8,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {Input} from "@/components/ui/input";
 
 import {CustomerVehicleServiceAddFormSchema} from '@/schemas'
+import {useRouter} from 'next/navigation'
 
 import {
     Form,
@@ -22,11 +23,6 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import { useState, useTransition} from "react";
 import {serviceAdd} from "@/actions/serviceAdd";
-import carBrands from "@/car_brands.json"
-import {Popover,PopoverTrigger,PopoverContent} from "@/components/ui/popover";
-import {Check, ChevronsUpDown} from "lucide-react";
-import {Command, CommandInput, CommandEmpty, CommandList,CommandGroup,CommandItem} from "@/components/ui/command";
-import {cn} from "@/lib/utils";
 
 const CustomerServiceAddForm = () => {
     const [error, setError] = useState<string | undefined>("");
@@ -46,15 +42,19 @@ const CustomerServiceAddForm = () => {
         }
     })
 
+    const router = useRouter()
+
+
     const onSubmit = (values: z.infer<typeof CustomerVehicleServiceAddFormSchema>) => {
         setError("");
         setSuccess("");
 
         startTransition(async () => {
-            console.log(values)
-            const data = await serviceAdd(values);
-            setSuccess(data.success);
-            setError(data.error)
+            await serviceAdd(values).then((data) => {
+                setSuccess(data.success);
+                setError(data.error)
+                router.push("/")
+            });
         });
     }
 

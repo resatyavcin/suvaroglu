@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import {TCustomer} from "@/constants";
-import customerData from '@/customer.json'
 
 interface ICustomerState {
     customerList: TCustomer[];
@@ -17,17 +16,25 @@ interface ICustomerState {
     setIsOpenAlertDialogComponent: () => void;
     isSelectableCustomers: boolean;
     setIsSelectableCustomers: (param?: boolean) => void;
+    setCustomerList: (param?: TCustomer[]) => void;
 
 }
 
 const useCustomerStore = create<ICustomerState>((set) => ({
     isOpenAlertDialogComponent: false,
     isViewActionButtons: false,
-    customerList: customerData?.db,
+    customerList: [],
     deleteButtonText: "Müşteriyi Sil",
     selectedCustomersCount: 0,
     selectedCustomers: [],
     isSelectableCustomers: false,
+
+    setCustomerList: (customerList?: TCustomer[]) => set((state: ICustomerState) => {
+        return {
+            customerList: customerList
+        }
+    }),
+
     setIsSelectableCustomers: (param?: boolean) => set((state: ICustomerState) => {
         return {
             isSelectableCustomers: param && !state.isSelectableCustomers,
@@ -41,9 +48,6 @@ const useCustomerStore = create<ICustomerState>((set) => ({
         }
     }),
 
-    setSelectedCustomers: (param: boolean |undefined) => set((state: ICustomerState) => {
-        return {}
-    }),
     selectCustomers: (customerId: string) => set((state: ICustomerState) =>
     {
         state.isViewActionButtons = true;

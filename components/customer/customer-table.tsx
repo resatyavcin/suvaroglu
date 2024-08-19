@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table";
 import {columns} from "@/components/customer/customer-columns";
 
 import {
@@ -11,15 +11,18 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
-    getSortedRowModel, SortingState,
-    useReactTable, VisibilityState,
+    getSortedRowModel,
+    SortingState,
+    useReactTable,
+    VisibilityState,
 } from "@tanstack/react-table"
 import {useCustomerStore} from "@/store";
-import { useLongPress } from "@uidotdev/usehooks";
+import {useLongPress} from "@uidotdev/usehooks";
+import {serviceList} from "@/actions/serviceList";
 
 
 const CustomerTable = ({isOpen}:any) => {
-    const { customerList, selectedCustomersCount, setIsSelectableCustomers, isSelectableCustomers } = useCustomerStore();
+    const { customerList, selectedCustomersCount, setIsSelectableCustomers, isSelectableCustomers, setCustomerList } = useCustomerStore();
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
@@ -66,6 +69,17 @@ const CustomerTable = ({isOpen}:any) => {
             setIsSelectableCustomers(false)
         }
     }, [isOpen]);
+
+    useEffect( () => {
+
+        const fetchCustomerServiceList = async () => {
+            return await serviceList();
+        }
+
+        const data = fetchCustomerServiceList().then((data)=>{
+            setCustomerList(data.data as any)
+        })
+    }, []);
 
     return (
         <Table>
