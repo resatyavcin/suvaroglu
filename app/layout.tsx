@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import {cn} from "@/lib/utils";
-import { FaCarAlt } from "react-icons/fa";
-import CustomerActions from "@/components/customer/customer-actions";
 import * as React from "react";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+      <html lang="en">
       <body className={cn(inter.className)}>
-          <div vaul-drawer-wrapper="" className="bg-white min-h-[100vh]">
-              {children}
-          </div>
+      <div vaul-drawer-wrapper="" className="bg-white min-h-[100vh]">
+          {children}
+      </div>
       </body>
-    </html>
+      </html>
   );
 }

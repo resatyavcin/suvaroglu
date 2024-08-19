@@ -6,6 +6,10 @@ html {
   background: white;
 }
 
+body{
+  font-size: 16px;
+}
+
 
 .custom-no-select {
   -webkit-touch-callout: none; /* iOS Safari */
