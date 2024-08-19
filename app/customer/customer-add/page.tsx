@@ -3,14 +3,11 @@
 import React, {useEffect} from 'react';
 import CustomerServiceAddForm from "@/components/customer/customer-service-add-form";
 
-interface CustomerAddPageProps {
-    setTitle: (value: string) => void;
-}
 
-const CustomerAdd = ({setTitle}:CustomerAddPageProps) => {
+export default function CustomerAdd(props:any) {
 
     useEffect(() => {
-        setTitle("Servis Aracı Ekle")
+        props.setTitle("Servis Aracı Ekle")
     }, []);
 
     return (
@@ -19,5 +16,3 @@ const CustomerAdd = ({setTitle}:CustomerAddPageProps) => {
         </div>
     );
 };
-
-export default CustomerAdd;
