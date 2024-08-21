@@ -8,10 +8,9 @@ type TCustomerColumn = (
         selectCustomers: (customer: string)=> void,
         unselectCustomers: (customer: string) => void,
         isSelectable: boolean,
-        selectedCustomersCount: number
-    ) => ColumnDef<TCustomer>[]
+    ) => ColumnDef<any>[]
 
-export const columns: TCustomerColumn = (selectCustomers, unselectCustomers, isSelectable,selectedCustomersCount) => ([
+export const columns: TCustomerColumn = (selectCustomers, unselectCustomers, isSelectable) => ([
     {
         id: "customerId",
         cell: ({ row }) => {
@@ -22,24 +21,21 @@ export const columns: TCustomerColumn = (selectCustomers, unselectCustomers, isS
                             checked={row.getIsSelected()}
                             onCheckedChange={(value) => {
                                 row.toggleSelected(!!value)
-
                                 if (value) {
-                                    selectCustomers(row.original.customerId)
+                                    selectCustomers(row.original.id)
                                     return;
                                 }
-                                unselectCustomers(row.original.customerId);
+                                unselectCustomers(row.original.id);
                             }}
                             aria-label="Select row"
                         />
                     }
                     <div>
                         <h2 className="font-bold">
-                            {row.original.customerName + ' ' + row.original.customerSurname}
+                            {row.original.header}
                         </h2>
                         <p>
-                            {row.original.customerVehicle + ' • ' + new Intl.NumberFormat('tr-TR', { style: "decimal" }).format(
-                                row.original.customerVehicleKM)
-                            } KM
+                            {row.original.description} KM
                         </p>
                     </div>
                 </div>

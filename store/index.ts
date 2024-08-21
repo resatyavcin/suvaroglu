@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import {TCustomer} from "@/constants";
 
 interface ICustomerState {
-    customerList: TCustomer[];
+    customerList: any[];
     deleteButtonText: string;
     selectedCustomersCount: number,
     selectedCustomers: string[] | null,
@@ -16,7 +16,6 @@ interface ICustomerState {
     setIsOpenAlertDialogComponent: () => void;
     isSelectableCustomers: boolean;
     setIsSelectableCustomers: (param?: boolean) => void;
-    setCustomerList: (param?: TCustomer[]) => void;
 
 }
 
@@ -29,11 +28,6 @@ const useCustomerStore = create<ICustomerState>((set) => ({
     selectedCustomers: [],
     isSelectableCustomers: false,
 
-    setCustomerList: (customerList?: TCustomer[]) => set((state: ICustomerState) => {
-        return {
-            customerList: customerList
-        }
-    }),
 
     setIsSelectableCustomers: (param?: boolean) => set((state: ICustomerState) => {
         return {

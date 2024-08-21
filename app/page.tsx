@@ -7,17 +7,20 @@ import CustomerTable from "@/components/customer/customer-table";
 import {Button} from "@/components/ui/button";
 import { IoAddSharp } from "react-icons/io5";
 import { useClickAway } from "@uidotdev/usehooks";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {CustomerAlertDialog} from "@/components/customer/customer-alert";
 import {useCustomerStore} from "@/store";
-import {FaCarAlt} from "react-icons/fa";
 import CustomerActions from "@/components/customer/customer-actions";
 
 import Link from "next/link";
+import {useQuery} from "@tanstack/react-query";
 
 export default function Home() {
+
+
     const { setIsOpenAlertDialogComponent, isOpenAlertDialogComponent, deleteCustomers, selectedCustomers } = useCustomerStore()
     const [isOpen, setIsOpen] = React.useState(false);
+
     const ref:any = useClickAway(() => {
         setIsOpen(true);
     });

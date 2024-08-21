@@ -18,11 +18,23 @@ import {
 } from "@tanstack/react-table"
 import {useCustomerStore} from "@/store";
 import {useLongPress} from "@uidotdev/usehooks";
-import {serviceList} from "@/actions/serviceList";
+import {useRouter} from "next/navigation";
+import {useQuery} from "@tanstack/react-query";
 
 
 const CustomerTable = ({isOpen}:any) => {
-    const { customerList, selectedCustomersCount, setIsSelectableCustomers, isSelectableCustomers, setCustomerList } = useCustomerStore();
+    const { customerList, selectedCustomersCount, setIsSelectableCustomers, isSelectableCustomers } = useCustomerStore();
+
+
+    const query = useQuery({
+        queryKey: ['customerList'],
+        queryFn: async () => {
+            const data = await fetch(`http://localhost:3000/api/folder`)
+            return data.json()
+        }
+    })
+
+
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         []
@@ -32,6 +44,9 @@ const CustomerTable = ({isOpen}:any) => {
     const [rowSelection, setRowSelection] = useState({})
 
     const { selectCustomers, unselectCustomers } = useCustomerStore();
+
+
+    const router = useRouter();
 
     const attrs = useLongPress(
         () => {
@@ -46,8 +61,8 @@ const CustomerTable = ({isOpen}:any) => {
     );
 
     const table = useReactTable({
-        data: customerList,
-        columns: columns(selectCustomers, unselectCustomers, isSelectableCustomers, selectedCustomersCount),
+        data: query.isSuccess && query.data.data as any,
+        columns: columns(selectCustomers, unselectCustomers, isSelectableCustomers),
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
@@ -62,7 +77,7 @@ const CustomerTable = ({isOpen}:any) => {
             columnVisibility,
             rowSelection,
         },
-    })
+    });
 
     useEffect(() => {
         if(isOpen && selectedCustomersCount === 0){
@@ -70,27 +85,23 @@ const CustomerTable = ({isOpen}:any) => {
         }
     }, [isOpen]);
 
-    useEffect( () => {
 
-        const fetchCustomerServiceList = async () => {
-            return await serviceList();
-        }
+    const handleRouteCustomerViewPage = (customerId: string) => {
+        router.push(`/customer/customer-detail/${customerId}`);
+    }
 
-        const data = fetchCustomerServiceList().then((data)=>{
-            setCustomerList(data.data as any)
-        })
-    }, []);
 
     return (
         <Table>
             <TableBody>
-                {table.getRowModel().rows?.length ? (
+                {query.isSuccess && table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) => (
                         <TableRow
-                            {...attrs}
-                            key={row.id}
+                            onClick={()=>handleRouteCustomerViewPage(row.original.id)}
+                            key={row.original.id}
                             data-state={row.getIsSelected() && "selected"}
                             className="custom-no-select"
+                            {...attrs}
                         >
                             {row.getVisibleCells().map((cell) => (
                                 <TableCell key={cell.id}>
