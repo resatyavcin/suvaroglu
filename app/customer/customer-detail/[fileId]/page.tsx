@@ -8,6 +8,9 @@ import {useMutation, useQuery} from "@tanstack/react-query";
 import * as z from "zod";
 import {CustomerVehicleServiceAddFormSchema} from "@/schemas";
 import {Form} from "@/components/ui/form";
+import Webcam from "react-webcam";
+
+
 
 const CustomerFile = () => {
 
@@ -92,6 +95,7 @@ const CustomerFile = () => {
                         Fotoğraf Ekle
                     </Button>
                 </form>
+
 
             </div>
         );
