@@ -48,9 +48,9 @@ function UploadButton({file}:any) {
     }, [mutation.isSuccess]);
 
 
-    return <Button className="flex-1" onClick={handleUploadPhoto}>
+    return <button className="flex-1" onClick={handleUploadPhoto}>
         Fotoğrafı yükle
-    </Button>
+    </button>
 }
 
 
