@@ -1,19 +1,10 @@
 "use client"
 
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {useParams} from 'next/navigation'
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
 import {useMutation, useQuery} from "@tanstack/react-query";
-import * as z from "zod";
-import {CustomerVehicleServiceAddFormSchema} from "@/schemas";
-import {Form} from "@/components/ui/form";
-import Webcam from "react-webcam";
-
-import Camera,{FACING_MODES} from 'react-html5-camera-photo';
-import 'react-html5-camera-photo/build/css/index.css';
-import {Dialog, DialogContent, DialogTrigger, DialogClose} from "@/components/ui/dialog";
-import {Card, CardContent} from "@/components/ui/card";
 
 const CustomerFile = () => {
     function handleTakePhoto (dataUri:any) {
@@ -22,7 +13,6 @@ const CustomerFile = () => {
     }
     const params = useParams();
     const [file, setFile] = useState()
-    const [mode, setMode] = useState(FACING_MODES.ENVIRONMENT)
     const {data, isSuccess} = useQuery({
         queryKey: ['customerInfo', params?.fileId],
         queryFn: async () => {
@@ -101,21 +91,6 @@ const CustomerFile = () => {
                         Fotoğraf Ekle
                     </Button>
                 </form>
-
-                <Card>
-                    <CardContent className="absolute p-0 top-0">
-                        <Button className={"absolute"} onClick={()=>setMode(FACING_MODES.ENVIRONMENT as any)}>
-                            Kamerayı Çevir
-                        </Button>
-                        {/*<Camera*/}
-                        {/*    idealFacingMode={mode}*/}
-                        {/*    isFullscreen*/}
-                        {/*    idealResolution={{width: 840, height:480}}*/}
-                        {/*    onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }*/}
-                        {/*/>*/}
-                    </CardContent>
-                </Card>
-
 
             </div>
         );

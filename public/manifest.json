@@ -1,6 +1,6 @@
 {
-    "name": "PWA App",
-    "short_name": "App",
+    "name": "Suvaroglu Oto Kaporta",
+    "short_name": "Suvaroglu",
     "icons": [
         {
             "src": "/icons/android-chrome-192x192.png",
