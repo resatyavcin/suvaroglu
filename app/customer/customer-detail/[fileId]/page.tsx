@@ -10,10 +10,15 @@ import {CustomerVehicleServiceAddFormSchema} from "@/schemas";
 import {Form} from "@/components/ui/form";
 import Webcam from "react-webcam";
 
-
+import Camera from 'react-html5-camera-photo';
+import 'react-html5-camera-photo/build/css/index.css';
+import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 
 const CustomerFile = () => {
-
+    function handleTakePhoto (dataUri:any) {
+        // Do stuff with the photo...
+        console.log('takePhoto');
+    }
     const params = useParams();
     const [file, setFile] = useState()
 
@@ -95,6 +100,17 @@ const CustomerFile = () => {
                         Fotoğraf Ekle
                     </Button>
                 </form>
+
+                <Dialog>
+                    <DialogTrigger>Open</DialogTrigger>
+                    <DialogContent className="p-0">
+                        <Camera
+                            isFullscreen
+                            onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
+                        />
+                    </DialogContent>
+
+                </Dialog>
 
 
             </div>
