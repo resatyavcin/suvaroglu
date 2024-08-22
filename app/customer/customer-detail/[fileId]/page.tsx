@@ -13,6 +13,7 @@ import Webcam from "react-webcam";
 import Camera,{FACING_MODES} from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import {Dialog, DialogContent, DialogTrigger, DialogClose} from "@/components/ui/dialog";
+import {Card, CardContent} from "@/components/ui/card";
 
 const CustomerFile = () => {
     function handleTakePhoto (dataUri:any) {
@@ -101,16 +102,31 @@ const CustomerFile = () => {
                     </Button>
                 </form>
 
-                <Dialog>
-                    <DialogTrigger>Open</DialogTrigger>
-
-                    <DialogContent>
-                        <Button onClick={()=>setMode(FACING_MODES.ENVIRONMENT as any)}>
-                            Merhaba
+                <Card>
+                    <CardContent className="absolute p-0 top-0">
+                        <Button className={"absolute"} onClick={()=>setMode(FACING_MODES.ENVIRONMENT as any)}>
+                            Kamerayı Çevir
                         </Button>
                         <Camera
                             idealFacingMode={mode}
-                            idealResolution={{width: 200, height:4200}}
+                            isFullscreen
+                            idealResolution={{width: 300, height:4600}}
+                            onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
+                        />
+                    </CardContent>
+                </Card>
+
+                <Dialog>
+                    <DialogTrigger>Open</DialogTrigger>
+
+                    <DialogContent className={"h-60"}>
+                        <Button onClick={()=>setMode(FACING_MODES.ENVIRONMENT as any)}>
+                            Kamerayı Çevir
+                        </Button>
+                        <Camera
+                            idealFacingMode={mode}
+                            isFullscreen
+                            idealResolution={{width: 600, height:800}}
                             onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
                         />
                     </DialogContent>

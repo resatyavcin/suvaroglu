@@ -20,7 +20,7 @@ const CustomerLayout = ({
 
 
     return (
-        <div className="p-7">
+        <div>
             <div className="flex items-center justify-between">
                 <Button variant="ghost" className="p-0" onClick={handlePreviousPage}>
                     <IoArrowBackCircle className="h-7 w-7"/>
