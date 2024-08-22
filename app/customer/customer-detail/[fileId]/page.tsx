@@ -110,7 +110,7 @@ const CustomerFile = () => {
                         <Camera
                             idealFacingMode={mode}
                             isFullscreen
-                            idealResolution={{width: 640, height:480}}
+                            idealResolution={{width: 840, height:480}}
                             onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
                         />
                     </CardContent>
