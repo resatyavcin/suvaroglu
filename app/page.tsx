@@ -54,12 +54,6 @@ export default function Home() {
                     </div>
                 </div>
 
-            <Link href="/camera-mode">
-                <Button type="button">
-                   Camera
-                </Button>
-            </Link>
-
 
                 <Link href="/customer/customer-add">
                     <Button type="button" className="rounded-full w-14 h-14 fixed bottom-10 right-6 drop-shadow-md">

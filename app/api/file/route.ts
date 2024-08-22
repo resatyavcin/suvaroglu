@@ -4,6 +4,7 @@ import {NextRequest, NextResponse} from "next/server";
 import {uploadFile} from "@/actions/uploadFile";
 
 
+
 export async function POST(req: NextRequest) {
     const formData = await req.formData();
 
@@ -20,9 +21,9 @@ export async function POST(req: NextRequest) {
         const fileName = await uploadFile(buffer, file.name, filePath);
 
 
-        return NextResponse.json({status: 200, data: fileName});
+        return NextResponse.json({status: 200, data: fileName, message: "Dosya başarıyla yüklendi."});
 
     }catch (err){
-        return NextResponse.json({error: err}, {status:400});
+        return NextResponse.json({error: err, message: "Dosya yükleme başarısız oldu."}, {status:400});
     }
 }
