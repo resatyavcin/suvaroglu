@@ -107,12 +107,12 @@ const CustomerFile = () => {
                         <Button className={"absolute"} onClick={()=>setMode(FACING_MODES.ENVIRONMENT as any)}>
                             Kamerayı Çevir
                         </Button>
-                        <Camera
-                            idealFacingMode={mode}
-                            isFullscreen
-                            idealResolution={{width: 840, height:480}}
-                            onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
-                        />
+                        {/*<Camera*/}
+                        {/*    idealFacingMode={mode}*/}
+                        {/*    isFullscreen*/}
+                        {/*    idealResolution={{width: 840, height:480}}*/}
+                        {/*    onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }*/}
+                        {/*/>*/}
                     </CardContent>
                 </Card>
 
