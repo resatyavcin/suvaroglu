@@ -64,7 +64,7 @@ const CameraMode = () => {
         fetch(data)
             .then(res => res.blob())
             .then(blob => {
-                const file = new File([blob], "name.png", { type: "image/png" })
+                const file = new File([blob], `name-${Date.now()}.png`, { type: "image/png" })
                 setFile(file)
             })
     }
