@@ -3,6 +3,7 @@ import {TCustomer} from "@/constants";
 
 interface ICustomerState {
     customerList: any[];
+    filePath: string;
     deleteButtonText: string;
     selectedCustomersCount: number,
     selectedCustomers: string[] | null,
@@ -16,6 +17,7 @@ interface ICustomerState {
     setIsOpenAlertDialogComponent: () => void;
     isSelectableCustomers: boolean;
     setIsSelectableCustomers: (param?: boolean) => void;
+    setFilePath: (param?: string) => void;
 
 }
 
@@ -27,7 +29,13 @@ const useCustomerStore = create<ICustomerState>((set) => ({
     selectedCustomersCount: 0,
     selectedCustomers: [],
     isSelectableCustomers: false,
+    filePath: "",
 
+    setFilePath: (param?: string) => set(() => {
+        return {
+           filePath: param
+        }
+    }),
 
     setIsSelectableCustomers: (param?: boolean) => set((state: ICustomerState) => {
         return {

@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({error: "File is required"}, {status: 400});
         }
 
+
         const buffer = Buffer.from(await file.arrayBuffer());
         const fileName = await uploadFile(buffer, file.name, filePath);
 

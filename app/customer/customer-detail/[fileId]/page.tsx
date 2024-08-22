@@ -13,12 +13,15 @@ import {PhotoProvider, PhotoSlider, PhotoView} from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
+import {useCustomerStore} from "@/store";
 const CustomerFile = () => {
 
     const params = useParams();
     const [file, setFile] = useState()
     const [medias, setMedias] = useState([])
     const [openMediaTunnel, setOpenMediaTunnel] = useState(false)
+    const {setFilePath} = useCustomerStore()
+
     const {data: customerInfoData, isSuccess} = useQuery({
         queryKey: ['customerInfo', params?.fileId],
         queryFn: async () => {
@@ -67,6 +70,7 @@ const CustomerFile = () => {
     useEffect(() => {
         if(customerInfoData && medias.length === 0){
             mediaMutation.mutate({filePath: customerInfoData.data.filePath})
+            setFilePath(customerInfoData.data.filePath)
         }
     }, [customerInfoData]);
 
@@ -154,8 +158,6 @@ const CustomerFile = () => {
                     visible={openMediaTunnel}
                     onClose={() => setOpenMediaTunnel(false)}
                 />
-
-
 
             </div>
         );
