@@ -29,7 +29,7 @@ const CustomerTable = ({isOpen}:any) => {
     const query = useQuery({
         queryKey: ['customerList'],
         queryFn: async () => {
-            const data = await fetch(`http://localhost:3000/api/folder`)
+            const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/folder`)
             return data.json()
         }
     })
