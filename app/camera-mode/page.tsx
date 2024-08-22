@@ -18,28 +18,32 @@ const CameraMode = () => {
     }
 
     return (
-        <Card className="w-full">
-            <CardContent className="w-full p-0 bg-black">
+        <Card className="m-7">
+            <CardContent className="w-full">
                 {
                     dataUri ?
-                            <div>
-                                <Button className="absolute z-50 bottom-0 right-0">
+                        <div className="flex flex-col justify-between items-center w-full">
+                            <img width={190} height={350} src={dataUri} alt={"screenshot"}/>
+
+                            <div className={"flex justify-between gap-x-1.5 mt-6"}>
+                                <Button>
                                     Fotoğrafı yükle
                                 </Button>
-                                <Button onClick={()=>setDataUri(undefined)} className="absolute z-50 top-0 right-0">
+                                <Button onClick={() => setDataUri(undefined)}>
                                     İptal et
                                 </Button>
-                            <img src={dataUri} alt={"screenshot"}/>
+                            </div>
+
                         </div> :
                         <Camera
-                            isFullscreen={true}
                             idealFacingMode={mode}
-                            idealResolution={{width: 840, height:480}}
-                            imageType = {IMAGE_TYPES.JPG}
-                            imageCompression = {0.97}
-                            isMaxResolution = {true}
-                            onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
-                    />
+                            imageType={IMAGE_TYPES.JPG}
+                            imageCompression={0.97}
+                            isMaxResolution={true}
+                            onTakePhoto={(dataUri) => {
+                                handleTakePhoto(dataUri);
+                            }}
+                        />
                 }
             </CardContent>
         </Card>
