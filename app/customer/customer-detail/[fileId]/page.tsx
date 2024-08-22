@@ -22,7 +22,7 @@ const CustomerFile = () => {
     }
     const params = useParams();
     const [file, setFile] = useState()
-    const [mode, setMode] = useState(FACING_MODES.USER)
+    const [mode, setMode] = useState(FACING_MODES.ENVIRONMENT)
     const {data, isSuccess} = useQuery({
         queryKey: ['customerInfo', params?.fileId],
         queryFn: async () => {
@@ -126,7 +126,7 @@ const CustomerFile = () => {
                         <Camera
                             idealFacingMode={mode}
                             isFullscreen
-                            idealResolution={{width: 600, height:800}}
+                            idealResolution={{width: 900, height:1600}}
                             onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
                         />
                     </DialogContent>
