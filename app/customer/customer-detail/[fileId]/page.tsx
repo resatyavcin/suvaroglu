@@ -12,7 +12,7 @@ import Webcam from "react-webcam";
 
 import Camera,{FACING_MODES} from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
-import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogTrigger, DialogClose} from "@/components/ui/dialog";
 
 const CustomerFile = () => {
     function handleTakePhoto (dataUri:any) {
@@ -21,7 +21,7 @@ const CustomerFile = () => {
     }
     const params = useParams();
     const [file, setFile] = useState()
-
+    const [mode, setMode] = useState(FACING_MODES.USER)
     const {data, isSuccess} = useQuery({
         queryKey: ['customerInfo', params?.fileId],
         queryFn: async () => {
@@ -103,10 +103,14 @@ const CustomerFile = () => {
 
                 <Dialog>
                     <DialogTrigger>Open</DialogTrigger>
-                    <DialogContent className="p-0">
+
+                    <DialogContent>
+                        <Button onClick={()=>setMode(FACING_MODES.ENVIRONMENT as any)}>
+                            Merhaba
+                        </Button>
                         <Camera
-                            idealFacingMode={FACING_MODES.ENVIRONMENT}
-                            isFullscreen
+                            idealFacingMode={mode}
+                            idealResolution={{width: 200, height:4200}}
                             onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
                         />
                     </DialogContent>
