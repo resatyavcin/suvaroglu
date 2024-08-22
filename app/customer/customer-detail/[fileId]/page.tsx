@@ -125,8 +125,6 @@ const CustomerFile = () => {
                         </Button>
                         <Camera
                             idealFacingMode={mode}
-                            idealResolution = {{width: 640, height: 480}}
-                            isFullscreen
                             onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
                         />
                     </DialogContent>
