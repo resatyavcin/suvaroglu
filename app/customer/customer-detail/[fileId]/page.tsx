@@ -110,26 +110,11 @@ const CustomerFile = () => {
                         <Camera
                             idealFacingMode={mode}
                             isFullscreen
-                            idealResolution={{width: 300, height:4600}}
+                            idealResolution={{width: 640, height:480}}
                             onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
                         />
                     </CardContent>
                 </Card>
-
-                <Dialog>
-                    <DialogTrigger>Open</DialogTrigger>
-
-                    <DialogContent className={"h-60"}>
-                        <Button onClick={()=>setMode(FACING_MODES.ENVIRONMENT as any)}>
-                            Kamerayı Çevir
-                        </Button>
-                        <Camera
-                            idealFacingMode={mode}
-                            onTakePhoto = { (dataUri) => { handleTakePhoto(dataUri); } }
-                        />
-                    </DialogContent>
-
-                </Dialog>
 
 
             </div>
