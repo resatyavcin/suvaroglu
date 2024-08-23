@@ -14,12 +14,13 @@ import 'react-photo-view/dist/react-photo-view.css';
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import {useCustomerStore} from "@/store";
+import { FaFileArrowUp } from "react-icons/fa6";
 const CustomerFile = () => {
 
     const params = useParams();
     const [file, setFile] = useState()
     const [medias, setMedias] = useState([])
-    const [openMediaTunnel, setOpenMediaTunnel] = useState(false)
+    const [openFileUpload, setOpenFileUpload] = useState(false)
     const {setFilePath} = useCustomerStore()
 
     const {data: customerInfoData, isSuccess} = useQuery({
@@ -84,6 +85,8 @@ const CustomerFile = () => {
     useEffect(() => {
         if(customerInfoData){
             mediaMutation.mutate({filePath: customerInfoData.data.filePath})
+            setOpenFileUpload(false);
+            setFile(undefined)
         }
     }, [mutation.isSuccess]);
 
@@ -106,61 +109,69 @@ const CustomerFile = () => {
     };
 
      return (
-            <div className="mt-5">
-                <div className="mb-5">
-                    {mutation.error && <FormError message={(mutation.error.message as any)}/> }
-                    {mutation.isSuccess && <FormSuccess message={(mutation.data.message as any)}/> }
-                </div>
+         <div className="mt-5">
+             <div className="mb-5">
+                 {mutation.error && <FormError message={(mutation.error.message as any)}/>}
+                 {mutation.isSuccess && <FormSuccess message={(mutation.data.message as any)}/>}
+             </div>
 
-                <div className="flex justify-between items-center">
-                    <div className="space-y-1.5">
-                        <h4 className="text-sm font-medium leading-none">
-                            {customerInfoData?.data?.customer?.customerName + " " + customerInfoData?.data?.customer?.customerSurname}
-                        </h4>
-                        <p className="text-sm text-muted-foreground">
-                            {
-                                customerInfoData?.data?.customer?.customerVehicle
-                                + " • " +
-                                Intl.NumberFormat("tr-TR", {maximumSignificantDigits: 3})
-                                    .format(customerInfoData?.data?.customer?.customerVehicleKM || 0)
-                                + " KM"
-                            }
-                        </p>
-                    </div>
+             <div className="flex justify-between items-center">
+                 <div className="space-y-1.5">
+                     <h4 className="text-sm font-medium leading-none">
+                         {customerInfoData?.data?.customer?.customerName + " " + customerInfoData?.data?.customer?.customerSurname}
+                     </h4>
+                     <p className="text-sm text-muted-foreground">
+                         {
+                             customerInfoData?.data?.customer?.customerVehicle
+                             + " • " +
+                             Intl.NumberFormat("tr-TR", {maximumSignificantDigits: 3})
+                                 .format(customerInfoData?.data?.customer?.customerVehicleKM || 0)
+                             + " KM"
+                         }
+                     </p>
+                 </div>
 
-                    <div>
-                        <Button className="mr-4" onClick={()=>setOpenMediaTunnel(true)}>
-                            <IoMdImage />
-                        </Button>
+                 <div>
+                     <Button className="mr-4" onClick={() => setOpenFileUpload(!openFileUpload)}>
+                         <FaFileArrowUp />
+                     </Button>
 
-                        <Link href={`/camera-mode?fileId=${params?.fileId}`}>
-                            <Button>
-                                <IoCameraSharp />
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-                <Separator className="my-4"/>
+                     <Link href={`/camera-mode?fileId=${params?.fileId}`}>
+                         <Button>
+                             <IoCameraSharp/>
+                         </Button>
+                     </Link>
+                 </div>
+             </div>
+             <Separator className="my-4"/>
 
-                <form className="mt-6">
-                    <Input onChange={handleUploadLocalFile} type="file" accept=".png, .jpg, .jpeg"/>
+             <form className="mt-6">
+                 {openFileUpload && <Input className="mb-3" onChange={handleUploadLocalFile} type="file" accept=".png, .jpg, .jpeg, .pdf"/>}
 
+                 {
+                     file && <Button onClick={handleUploadS3} className="mt-2.5">
+                         Dosyayı Ekle
+                     </Button>
+                 }
+             </form>
+
+
+             <div className="grid grid-cols-3 grid-rows-4 gap-4">
+
+                <PhotoProvider>
                     {
-                        file && <Button onClick={handleUploadS3} className="mt-2.5">
-                            Dosyayı Ekle
-                        </Button>
+                        medias.map((item:any, i)=>{
+                            return <PhotoView src={item} key={i}>
+                                <img src={item} alt=""/>
+                            </PhotoView>
+                        })
                     }
-                </form>
+                </PhotoProvider>
+             </div>
 
-                <PhotoSlider
-                    speed={()=>10}
-                    images={medias.map((item) => ({ src: item, key: item }))}
-                    visible={openMediaTunnel}
-                    onClose={() => setOpenMediaTunnel(false)}
-                />
 
-            </div>
-        );
+         </div>
+     );
 
 };
 
