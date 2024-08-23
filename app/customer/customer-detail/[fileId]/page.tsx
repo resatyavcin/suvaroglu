@@ -146,7 +146,7 @@ const CustomerFile = () => {
                     <Input onChange={handleUploadLocalFile} type="file" accept=".png, .jpg, .jpeg"/>
 
                     {
-                        file &&  <Button onClick={handleUploadS3} className="mt-2.5">
+                        file && <Button onClick={handleUploadS3} className="mt-2.5">
                             Dosyayı Ekle
                         </Button>
                     }

@@ -4,13 +4,11 @@ import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 import Camera, {IMAGE_TYPES} from "react-html5-camera-photo";
 import {Suspense, useEffect, useState} from "react";
-
+import { IoCloseSharp } from "react-icons/io5";
 import 'react-html5-camera-photo/build/css/index.css';
 import {useRouter, useSearchParams, useParams, usePathname} from "next/navigation";
 import {useMutation} from "@tanstack/react-query";
 import {useCustomerStore} from "@/store";
-
-
 
 function UploadButton({file}:any) {
     const searchParams = useSearchParams()
@@ -48,23 +46,32 @@ function UploadButton({file}:any) {
     }, [mutation.isSuccess]);
 
 
-    return <button className="flex-1" onClick={handleUploadPhoto}>
-        Fotoğrafı yükle
-    </button>
+    return <div className="w-full">
+        {
+            mutation.isPending &&
+            <div>
+                <p> Yükleniyor.. </p>
+            </div>
+        }
+            <Button className="w-full mt-3" onClick={handleUploadPhoto}>
+                Fotoğrafı yükle
+            </Button>
+        </div>
+
 }
 
 
 const CameraMode = () => {
     const [dataUri, setDataUri] = useState<any>()
-    const [file, setFile] = useState< File | undefined>(undefined)
+    const [file, setFile] = useState<File | undefined>(undefined)
 
-    const handleTakePhoto = (data:any) => {
+    const handleTakePhoto = (data: any) => {
         setDataUri(data)
 
         fetch(data)
             .then(res => res.blob())
             .then(blob => {
-                const file = new File([blob], `name-${Date.now()}.png`, { type: "image/png" })
+                const file = new File([blob], `name-${Date.now()}.jpeg`, { type: "image/jpeg" })
                 setFile(file)
             })
     }
@@ -73,30 +80,25 @@ const CameraMode = () => {
     return (
         <Suspense fallback={null}>
             <Card className="m-7">
-                <CardHeader className="pt-0">
-
-
-                </CardHeader>
+                <CardHeader className="py-0">
+                    {dataUri && <IoCloseSharp className="w-5 h-5 my-3" onClick={() => setDataUri(undefined)}/>
+                    }                </CardHeader>
                 <CardContent className="h-full w-full">
                     {
                         dataUri ?
                             <div className="flex flex-col justify-between items-center w-full">
                                 <img src={dataUri} alt={"screenshot"}/>
-                                <div className={"flex justify-between gap-x-1.5 mt-6 w-full"}>
-                                    <Button variant="destructive" onClick={() => setDataUri(undefined)}>
-                                        İptal et
-                                    </Button>
                                     <UploadButton file={file}/>
-                                </div>
-
                             </div> :
-                            <Camera
-                                idealFacingMode={"environment"}
-                                imageType={IMAGE_TYPES.PNG}
-                                imageCompression={0.25}
-                                isMaxResolution={true}
-                                onTakePhotoAnimationDone = { (dataUri) => { handleTakePhoto(dataUri); } }
-                            />
+                            <div className="mt-5">
+                                <Camera
+                                    idealFacingMode={"environment"}
+                                    imageType={IMAGE_TYPES.JPG}
+                                    imageCompression={0.25}
+                                    isMaxResolution={true}
+                                    onTakePhotoAnimationDone = { (dataUri) => { handleTakePhoto(dataUri); } }
+                                />
+                            </div>
                     }
                 </CardContent>
             </Card>
