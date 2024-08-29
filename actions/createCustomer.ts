@@ -13,8 +13,7 @@ export const createCustomer = async ({
                                          customerVehicle,
                                          customerVehicleKM,
                                          customerFilePath
-                                     }: TCustomer & { customerFilePath: string, customerNameFilter: string,
-    customerSurnameFilter: string }) => {
+                                     }: TCustomer & { customerFilePath: string }) => {
 
 
     try{
@@ -38,8 +37,8 @@ export const createCustomer = async ({
         return {
             response
         }
-    }catch (error){
-        throw new Error("CreateCustomer başarısız: " + error);
+    }catch (error: any){
+        throw new Error("CreateCustomer başarısız: " + error?.message);
     }
 
 }

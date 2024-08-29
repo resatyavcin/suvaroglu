@@ -60,9 +60,9 @@ export async function POST(req: NextRequest) {
         } as any)
 
 
-        return Response.json({status: 200, data: data.customerId, message: "Araç servise başarı ile kaydedilmiştir."})
+        return NextResponse.json({status: 200, data: data.customerId, message: "Araç servise başarı ile kaydedilmiştir."})
 
     }catch (err){
-        return Response.json({error: err, message: "Araç kaydetme başarısız. Lütfen tekrar deneyiniz."});
+        return NextResponse.json({error: err, message: "Araç kaydetme başarısız. Lütfen tekrar deneyiniz.", status: 400});
     }
 }
