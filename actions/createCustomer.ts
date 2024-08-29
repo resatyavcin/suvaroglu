@@ -38,8 +38,8 @@ export const createCustomer = async ({
         return {
             response
         }
-    }catch (err){
-        return err
+    }catch (error){
+        throw new Error("CreateCustomer başarısız: " + error);
     }
 
 }
