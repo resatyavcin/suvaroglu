@@ -13,26 +13,33 @@ export const createCustomer = async ({
                                          customerVehicle,
                                          customerVehicleKM,
                                          customerFilePath
-                                     }: TCustomer & { customerFilePath: string }) => {
+                                     }: TCustomer & { customerFilePath: string, customerNameFilter: string,
+    customerSurnameFilter: string }) => {
 
 
-    const command = new PutCommand({
-        TableName: process.env.NEXT_PUBLIC_AWS_TABLE,
-        Item: {
-            customerId,
-            customerName,
-            customerSurname,
-            customerVehicle,
-            customerVehicleKM,
-            customerFilePath,
-            customerDate: new Date().toISOString(),
+    try{
+        const command = new PutCommand({
+            TableName: process.env.NEXT_PUBLIC_AWS_TABLE,
+            Item: {
+                customerId,
+                customerName,
+                customerSurname,
+                customerNameFilter: customerName.toLowerCase(),
+                customerSurnameFilter: customerSurname.toLowerCase(),
+                customerVehicle,
+                customerVehicleKM,
+                customerFilePath,
+                customerDate: new Date().toISOString(),
+            }
+        })
+
+        const response = await docClient.send(command);
+
+        return {
+            response
         }
-    })
-
-    const response = await docClient.send(command);
-
-    return {
-        response
+    }catch (err){
+        return err
     }
 
 }

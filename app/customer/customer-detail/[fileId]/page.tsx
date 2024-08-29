@@ -7,7 +7,6 @@ import {Button} from "@/components/ui/button";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {Input} from "@/components/ui/input";
 import { IoCameraSharp } from "react-icons/io5";
-import { IoMdImage } from "react-icons/io";
 import Link from "next/link";
 import {PhotoProvider, PhotoSlider, PhotoView} from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
@@ -25,6 +24,7 @@ const CustomerFile = () => {
     const [openFileUpload, setOpenFileUpload] = useState(false)
     const {setFilePath, setFileName} = useCustomerStore();
     const [verifyContentMedia, setVerifyContentMedia] = useState<any>(undefined)
+
     const {data: customerInfoData, isSuccess} = useQuery({
         queryKey: ['customerInfo', params?.fileId],
         queryFn: async () => {
@@ -74,7 +74,7 @@ const CustomerFile = () => {
         if(customerInfoData){
             mediaMutation.mutate({filePath: customerInfoData.data.filePath})
             setFilePath(customerInfoData.data.filePath)
-            setFileName("verifyKM.jpeg")
+            setFileName("")
         }
     }, [customerInfoData]);
 
@@ -117,12 +117,12 @@ const CustomerFile = () => {
     };
 
 
-     // @ts-ignore
+
     return (
          <div className="mt-5">
              <div className="mb-5">
-                 {mutation.error && <FormError message={(mutation.error.message as any)}/>}
-                 {mutation.isSuccess && <FormSuccess message={(mutation.data.message as any)}/>}
+                 {mutation.isError  && <FormError message={(mutation.error.message as any)}/>}
+                 {mutation.isSuccess  && <FormSuccess message={(mutation.data.message as any)}/>}
              </div>
 
              <div className="flex justify-between items-center">
@@ -154,14 +154,12 @@ const CustomerFile = () => {
                              </PhotoProvider> :
 
                              <Link href={`/camera-mode?fileId=${params?.fileId}`}>
-                                 <Button className="mr-4 bg-red-800" >
+                                 <Button className="mr-4 bg-red-800" onClick={()=>setFileName("verifyKM.jpeg")}>
                                      <BsSpeedometer />
                                  </Button>
                              </Link>
 
                      }
-
-
 
 
                      <Button className="mr-4" onClick={() => setOpenFileUpload(!openFileUpload)}>
@@ -178,10 +176,10 @@ const CustomerFile = () => {
              <Separator className="my-4"/>
 
              <form className="mt-6">
-                 {openFileUpload && <Input className="mb-3" onChange={handleUploadLocalFile} type="file" accept=".png, .jpg, .jpeg, .pdf"/>}
+                 {openFileUpload && <Input className="mt-3" onChange={handleUploadLocalFile} type="file" accept=".png, .jpg, .jpeg, .pdf"/>}
 
                  {
-                     file && <Button onClick={handleUploadS3} className="mt-2.5">
+                     file && <Button onClick={handleUploadS3} className="mt-3 mb-6">
                          Dosyayı Ekle
                      </Button>
                  }

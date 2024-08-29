@@ -15,7 +15,7 @@ const CustomerLayout = ({
     const router = useRouter();
     const [title, setTitle] = useState("")
     const handlePreviousPage = () => {
-        router.back();
+        router.push("/");
     }
 
 
@@ -25,7 +25,7 @@ const CustomerLayout = ({
                 <Button variant="ghost" className="p-0" onClick={handlePreviousPage}>
                     <IoArrowBackCircle className="h-7 w-7"/>
                 </Button>
-                <h1 className="font-extrabold text-emerald-500">{"title"}</h1>
+                <h1 className="font-extrabold text-emerald-500">{"Suvaroğlu Oto Kaporta"}</h1>
             </div>
             {children}
         </div>

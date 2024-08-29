@@ -5,6 +5,7 @@ import {s3} from "@/constants/s3";
 
 export const uploadFile = async (file: any, fileName: any, filePath: any) => {
 
+    console.log(fileName)
     try {
         const uploadToS3 = new PutObjectCommand({
             Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,

@@ -17,9 +17,8 @@ function UploadButton({file}:any) {
 
     const mutation = useMutation({
         mutationFn: async (values:any) => {
-
-            console.log(values)
             const form_data = new FormData();
+
             for ( let key in values ) {
                 form_data.append(key, values[key]);
             }
@@ -37,7 +36,7 @@ function UploadButton({file}:any) {
         mutation.mutate({
             file,
             filePath,
-            fileName: fileName ? fileName : undefined
+            fileName: fileName ? fileName : file.name
         });
     }
 

@@ -19,8 +19,6 @@ export async function POST(req: NextRequest) {
         }
 
 
-        console.log(fileNameSave ? fileNameSave : file.name)
-
         const buffer = Buffer.from(await file.arrayBuffer());
         const fileName = await uploadFile(buffer, fileNameSave ? fileNameSave : file.name , filePath);
 

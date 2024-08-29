@@ -15,10 +15,10 @@ export const listFolders = async ({customerName, customerSurname}: {customerName
             Limit: number;
             FilterExpression?: string;
             ExpressionAttributeValues?: ExpressionAttributeValues;
-            ScanIndexForward?: boolean
+            ScanIndexForward?: boolean,
+            IndexName?: string
         } = {
             TableName: "customer",
-            ScanIndexForward: false,
             Limit: 30
         };
 
@@ -29,16 +29,16 @@ export const listFolders = async ({customerName, customerSurname}: {customerName
 
         // Add FilterExpression and ExpressionAttributeValues based on customerName and customerSurname
         if (customerName) {
-            filterExpression += 'contains(customerName, :statusValue)';
-            expressionAttributeValues[':statusValue'] = { S: customerName };
+            filterExpression += 'contains(customerNameFilter, :statusValue)';
+            expressionAttributeValues[':statusValue'] = { S: customerName.toLowerCase() };
         }
 
         if (customerSurname) {
             if (filterExpression) {
                 filterExpression += ' AND ';
             }
-            filterExpression += 'contains(customerSurname, :statusValue2)';
-            expressionAttributeValues[':statusValue2'] = { S: customerSurname };
+            filterExpression += 'contains(customerSurnameFilter, :statusValue2)';
+            expressionAttributeValues[':statusValue2'] = { S: customerSurname.toLowerCase() };
         }
 
         if (filterExpression) {
