@@ -38,7 +38,7 @@ export const createCustomer = async ({
             response
         }
     }catch (error: any){
-        throw new Error("CreateCustomer başarısız: " + JSON.stringify(error));
+        throw new Error("CreateCustomer başarısız: " + error);
     }
 
 }

@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
         } = body
 
 
-        const data = await createFolder({
+        const data:any = await createFolder({
             customerName,
             customerSurname,
             customerVehicle,
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json({status: 200, data: data.customerId, message: "Araç servise başarı ile kaydedilmiştir."})
 
-    }catch (err){
-        return NextResponse.json({error: JSON.stringify(err), message: "Araç kaydetme başarısız. Lütfen tekrar deneyiniz."}, {status: 500});
+    }catch (err:any){
+        return NextResponse.json({error: JSON.stringify(err.message), message: "Araç kaydetme başarısız. Lütfen tekrar deneyiniz."}, {status: 500});
     }
 }

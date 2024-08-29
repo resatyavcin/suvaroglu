@@ -30,8 +30,12 @@ const CustomerServiceAddForm = () => {
                 body: JSON.stringify(values),
             })
 
+            if(!data.ok){
+                throw new Error("Failed to add form data")
+            }
+
             return data.json()
-        }
+        },
     })
 
     const [open, setOpen] = useState<boolean>(false)
