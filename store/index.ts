@@ -4,6 +4,7 @@ import {TCustomer} from "@/constants";
 interface ICustomerState {
     customerList: any[];
     filePath: string;
+    fileName: string;
     deleteButtonText: string;
     selectedCustomersCount: number,
     selectedCustomers: string[] | null,
@@ -18,7 +19,7 @@ interface ICustomerState {
     isSelectableCustomers: boolean;
     setIsSelectableCustomers: (param?: boolean) => void;
     setFilePath: (param?: string) => void;
-
+    setFileName: (param?: string) => void;
 }
 
 const useCustomerStore = create<ICustomerState>((set) => ({
@@ -30,10 +31,17 @@ const useCustomerStore = create<ICustomerState>((set) => ({
     selectedCustomers: [],
     isSelectableCustomers: false,
     filePath: "",
+    fileName: "",
 
     setFilePath: (param?: string) => set(() => {
         return {
-           filePath: param
+            filePath: param
+        }
+    }),
+
+    setFileName: (param?: string) => set(() => {
+        return {
+            fileName: param
         }
     }),
 

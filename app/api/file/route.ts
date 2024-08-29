@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
 
     const file = formData.get("file") as File;
     const filePath = formData.get("filePath") as string;
+    const fileNameSave = formData.get("fileName") as string;
 
     try {
         if(!file){
@@ -18,8 +19,10 @@ export async function POST(req: NextRequest) {
         }
 
 
+        console.log(fileNameSave ? fileNameSave : file.name)
+
         const buffer = Buffer.from(await file.arrayBuffer());
-        const fileName = await uploadFile(buffer, file.name, filePath);
+        const fileName = await uploadFile(buffer, fileNameSave ? fileNameSave : file.name , filePath);
 
 
         return NextResponse.json({status: 200, data: fileName, message: "Dosya başarıyla yüklendi."});

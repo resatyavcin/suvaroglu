@@ -13,11 +13,12 @@ import {useCustomerStore} from "@/store";
 function UploadButton({file}:any) {
     const searchParams = useSearchParams()
     const {push} = useRouter();
-    const {filePath} = useCustomerStore()
+    const {filePath, fileName} = useCustomerStore()
 
     const mutation = useMutation({
         mutationFn: async (values:any) => {
 
+            console.log(values)
             const form_data = new FormData();
             for ( let key in values ) {
                 form_data.append(key, values[key]);
@@ -35,7 +36,8 @@ function UploadButton({file}:any) {
 
         mutation.mutate({
             file,
-            filePath
+            filePath,
+            fileName: fileName ? fileName : undefined
         });
     }
 

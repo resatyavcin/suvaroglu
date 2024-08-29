@@ -1,25 +1,84 @@
 "use server"
 
-import {ListObjectsCommand} from "@aws-sdk/client-s3";
-import {s3} from "@/constants/s3";
+import { ScanCommand } from "@aws-sdk/client-dynamodb";
+import {docClient} from "@/constants/dynamo";
 
-export const listFolders = async () => {
+interface ExpressionAttributeValues {
+    [key: string]: { S: string }; // Adjust the type if needed
+}
 
-    const listFolder = new ListObjectsCommand({
-        Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
-        Delimiter: "contents/",
-    });
+export const listFolders = async ({customerName, customerSurname}: {customerName: string, customerSurname: string}) => {
 
-    const listFolderPromise = await s3().send(listFolder)
+    try{
+        const paramsWithExclusiveStartKey: {
+            TableName: string;
+            Limit: number;
+            FilterExpression?: string;
+            ExpressionAttributeValues?: ExpressionAttributeValues;
+            ScanIndexForward?: boolean
+        } = {
+            TableName: "customer",
+            ScanIndexForward: false,
+            Limit: 30
+        };
 
-    return (listFolderPromise.CommonPrefixes || []).map((content: any) => {
-        const id = content.Prefix.slice(0, -1).split('/')[0]
-        const info = content.Prefix.slice(0, -1).split('/')[1].split("-")
-        return {
-            id,
-            header: info[0] + " " + info[1],
-            description: info[2] + " • " + new Intl.NumberFormat('tr-TR', { style: "decimal" }).format(info[3]),
+
+        // Initialize values
+        let filterExpression = '';
+        const expressionAttributeValues: ExpressionAttributeValues = {};
+
+        // Add FilterExpression and ExpressionAttributeValues based on customerName and customerSurname
+        if (customerName) {
+            filterExpression += 'contains(customerName, :statusValue)';
+            expressionAttributeValues[':statusValue'] = { S: customerName };
         }
-    });
+
+        if (customerSurname) {
+            if (filterExpression) {
+                filterExpression += ' AND ';
+            }
+            filterExpression += 'contains(customerSurname, :statusValue2)';
+            expressionAttributeValues[':statusValue2'] = { S: customerSurname };
+        }
+
+        if (filterExpression) {
+            paramsWithExclusiveStartKey.FilterExpression = filterExpression;
+        }
+        if (Object.keys(expressionAttributeValues).length > 0) {
+            paramsWithExclusiveStartKey.ExpressionAttributeValues = expressionAttributeValues;
+        }
+
+        const dynamoReturnData = await docClient.send(new ScanCommand(paramsWithExclusiveStartKey));
+
+        const processedData:any = (dynamoReturnData.Items ||[]).map(item => ({
+            customerName: item.customerName.S,
+            customerVehicle: item.customerVehicle.S,
+            customerSurname: item.customerSurname.S,
+            customerVehicleKM: item.customerVehicleKM.S,
+            customerFilePath: item.customerFilePath.S,
+            customerId: item.customerId.S,
+            customerDate: item.customerDate.S as string,
+        }))
+
+        processedData.sort((a:any, b:any) => {
+            const dateA = new Date(a.customerDate).getTime();
+            const dateB = new Date(b.customerDate).getTime();
+            return dateB - dateA;
+        });
+
+
+        return (processedData || []).map((content: any) => {
+            return {
+                nextMarker: (dynamoReturnData?.LastEvaluatedKey as any)?.customerId?.S,
+                id: content.customerId,
+                header: content.customerName + " " + content.customerSurname,
+                description:  content.customerVehicle + " • " + new Intl.NumberFormat('tr-TR', { style: "decimal" }).format( content.customerVehicleKM),
+            }
+        });
+    }catch (err){
+        return err
+    }
+
+
 
 }

@@ -11,7 +11,6 @@ export const getFolder = async (fileId: string) => {
 
     const listFolderPromise = await s3().send(listFolder)
 
-
     return (listFolderPromise.Contents || []).filter((content: any) =>
         content.Key?.slice(0, -1)?.split('/')[0] === fileId
     ).map((content: any) =>{

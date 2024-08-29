@@ -6,12 +6,19 @@ import {createFolder} from "@/actions/createFolder";
 import {listFolders} from "@/actions/listFolders";
 import * as z from "zod";
 import {CustomerVehicleServiceAddFormSchema} from "@/schemas";
+import {createCustomer} from "@/actions/createCustomer";
 
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
     try {
+        const { searchParams } = new URL(request.url);
 
-        const data = await listFolders()
+        const data = await listFolders(
+            {
+                customerName: (searchParams.get("customerName")) || "",
+                customerSurname: (searchParams.get("customerSurname")) || ""
+            }
+        )
         return Response.json({status: 200, data: data});
 
     }catch (err){
@@ -35,12 +42,23 @@ export async function POST(req: NextRequest) {
             customerVehicleKM
         } = body
 
+
         const data = await createFolder({
             customerName,
             customerSurname,
             customerVehicle,
             customerVehicleKM,
         } as any)
+
+        await createCustomer({
+            customerId: data.customerId,
+            customerName,
+            customerSurname,
+            customerVehicle,
+            customerVehicleKM,
+            customerFilePath: data.filePath
+        } as any)
+
 
         return Response.json({status: 200, data: data.customerId, message: "Araç servise başarı ile kaydedilmiştir."})
 

@@ -22,7 +22,10 @@ export const getMedias = async (filePath: string) => {
             Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
             Key: filePath + mediaString
         });
-        urls.push(await getSignedUrl(s3(), object));
+        urls.push({
+            url: await getSignedUrl(s3(), object),
+            name: mediaString
+        });
     }
 
     return urls

@@ -15,14 +15,16 @@ import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
 import {useCustomerStore} from "@/store";
 import { FaFileArrowUp } from "react-icons/fa6";
+import { BsSpeedometer } from "react-icons/bs";
+
 const CustomerFile = () => {
 
     const params = useParams();
     const [file, setFile] = useState()
     const [medias, setMedias] = useState([])
     const [openFileUpload, setOpenFileUpload] = useState(false)
-    const {setFilePath} = useCustomerStore()
-
+    const {setFilePath, setFileName} = useCustomerStore();
+    const [verifyContentMedia, setVerifyContentMedia] = useState<any>(undefined)
     const {data: customerInfoData, isSuccess} = useQuery({
         queryKey: ['customerInfo', params?.fileId],
         queryFn: async () => {
@@ -69,9 +71,10 @@ const CustomerFile = () => {
     })
 
     useEffect(() => {
-        if(customerInfoData && medias.length === 0){
+        if(customerInfoData){
             mediaMutation.mutate({filePath: customerInfoData.data.filePath})
             setFilePath(customerInfoData.data.filePath)
+            setFileName("verifyKM.jpeg")
         }
     }, [customerInfoData]);
 
@@ -79,6 +82,11 @@ const CustomerFile = () => {
     useEffect(() => {
         if(mediaMutation.isSuccess){
             setMedias(mediaMutation.data.data)
+            const verifyContents:any[] = mediaMutation.data.data.filter((item:any, index:number) => (item.name as string).includes("verifyKM"))[0]
+
+            if(verifyContents){
+                setVerifyContentMedia(verifyContents as any)
+            }
         }
     }, [mediaMutation.isSuccess]);
 
@@ -108,7 +116,9 @@ const CustomerFile = () => {
         });
     };
 
-     return (
+
+     // @ts-ignore
+    return (
          <div className="mt-5">
              <div className="mb-5">
                  {mutation.error && <FormError message={(mutation.error.message as any)}/>}
@@ -132,6 +142,28 @@ const CustomerFile = () => {
                  </div>
 
                  <div>
+
+                     {
+                         verifyContentMedia ?
+                             <PhotoProvider>
+                                 <PhotoView src={verifyContentMedia?.url || ""}>
+                                         <Button className="mr-4 bg-green-600" >
+                                             <BsSpeedometer />
+                                         </Button>
+                                 </PhotoView>
+                             </PhotoProvider> :
+
+                             <Link href={`/camera-mode?fileId=${params?.fileId}`}>
+                                 <Button className="mr-4 bg-red-800" >
+                                     <BsSpeedometer />
+                                 </Button>
+                             </Link>
+
+                     }
+
+
+
+
                      <Button className="mr-4" onClick={() => setOpenFileUpload(!openFileUpload)}>
                          <FaFileArrowUp />
                      </Button>
@@ -160,9 +192,9 @@ const CustomerFile = () => {
 
                 <PhotoProvider>
                     {
-                        medias.map((item:any, i)=>{
-                            return <PhotoView src={item} key={i}>
-                                <img src={item} alt=""/>
+                        medias.filter((item:any) => !item.name.includes("verifyKM")).map((item:any, i)=>{
+                            return <PhotoView src={item.url} key={i}>
+                                <img src={item.url} alt=""/>
                             </PhotoView>
                         })
                     }
