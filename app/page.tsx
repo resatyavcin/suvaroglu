@@ -17,8 +17,6 @@ import {useQuery} from "@tanstack/react-query";
 
 export default function Home() {
 
-
-    const { setIsOpenAlertDialogComponent, isOpenAlertDialogComponent, deleteCustomers, selectedCustomers } = useCustomerStore()
     const [isOpen, setIsOpen] = React.useState(false);
 
     const ref:any = useClickAway(() => {
@@ -32,22 +30,11 @@ export default function Home() {
     return (
         <div>
             <div className="flex items-center justify-between h-full my-5 mx-3">
-                <h2 className="font-extrabold text-xl text-emerald-500">Suvaroglu</h2>
+                <h2 className="font-extrabold text-xl text-blue-500">Suvaroglu</h2>
                 <CustomerActions/>
             </div>
 
-            <CustomerAlertDialog
-                title={"Emin misin?"}
-                description={"Seçtiğiniz kayıtlar silinecektir. Geri alnımaz. Silmek istediğinizden emin misiniz?"}
-                    okText={"Kalıcı olarak sil"}
-                    cancelText={"Vazgeç"}
-                    onApprove={() => {
-                        setIsOpenAlertDialogComponent()
-                        deleteCustomers(selectedCustomers ||[])
-                    }}
-                    onCancel={()=>{setIsOpenAlertDialogComponent()}}
-                    isOpen={isOpenAlertDialogComponent}
-                />
+
                 <div className="w-full">
                     <div ref={ref} className="rounded-md border">
                         <CustomerTable isOpen={isOpen} />

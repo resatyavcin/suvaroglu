@@ -13,7 +13,7 @@ import {useCustomerStore} from "@/store";
 function UploadButton({file}:any) {
     const searchParams = useSearchParams()
     const {push} = useRouter();
-    const {filePath, fileName} = useCustomerStore()
+    const {filePath, fileName,setFilePath} = useCustomerStore()
 
     const mutation = useMutation({
         mutationFn: async (values:any) => {
@@ -32,7 +32,6 @@ function UploadButton({file}:any) {
     })
 
     const handleUploadPhoto = () => {
-
         mutation.mutate({
             file,
             filePath,
@@ -42,9 +41,17 @@ function UploadButton({file}:any) {
 
     useEffect(() => {
         if(mutation.isSuccess){
+            if(searchParams.get("folderId")){
+                push(`/folders/${searchParams.get("folderId")}`);
+                return;
+            }
+
             push(`/customer/customer-detail/${searchParams.get("fileId")}`);
+
         }
     }, [mutation.isSuccess]);
+
+
 
 
     return <div className="w-full">
@@ -65,6 +72,9 @@ function UploadButton({file}:any) {
 const CameraMode = () => {
     const [dataUri, setDataUri] = useState<any>()
     const [file, setFile] = useState<File | undefined>(undefined)
+    const {filePath} = useCustomerStore()
+    const {push} = useRouter();
+    const searchParams = useSearchParams()
 
     const handleTakePhoto = (data: any) => {
         setDataUri(data)
@@ -77,6 +87,12 @@ const CameraMode = () => {
             })
     }
 
+
+    useEffect(() => {
+        if(!filePath){
+            push(`/folders/${searchParams.get("folderId")}`);
+        }
+    }, []);
 
     return (
         <Suspense fallback={null}>

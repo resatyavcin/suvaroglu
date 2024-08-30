@@ -50,8 +50,6 @@ const CustomerTable = ({isOpen}: any) => {
     const {selectCustomers, unselectCustomers} = useCustomerStore();
 
 
-    const router = useRouter();
-
     const attrs = useLongPress(
         () => {
             setIsSelectableCustomers(true);
@@ -90,11 +88,6 @@ const CustomerTable = ({isOpen}: any) => {
     }, [isOpen]);
 
 
-    const handleRouteCustomerViewPage = (customerId: string) => {
-        router.push(`/customer/customer-detail/${customerId}`);
-    }
-
-
     return (
         <div>
             <CustomerFilterForm setFilterValues={setFilterValues} refetch={query.refetch()}/>
@@ -106,7 +99,6 @@ const CustomerTable = ({isOpen}: any) => {
                     {query.isSuccess && table.getRowModel().rows?.length ? (
                         table.getRowModel().rows.map((row) => (
                             <TableRow
-                                onClick={() => handleRouteCustomerViewPage(row.original.id)}
                                 key={row.original.id}
                                 data-state={row.getIsSelected() && "selected"}
                                 className="custom-no-select"

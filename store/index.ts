@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import {TCustomer} from "@/constants";
 
+
+
 interface ICustomerState {
     customerList: any[];
     filePath: string;
@@ -20,6 +22,7 @@ interface ICustomerState {
     setIsSelectableCustomers: (param?: boolean) => void;
     setFilePath: (param?: string) => void;
     setFileName: (param?: string) => void;
+    folders:  {folderName: string, folderPath: string}[]
 }
 
 const useCustomerStore = create<ICustomerState>((set) => ({
@@ -32,6 +35,24 @@ const useCustomerStore = create<ICustomerState>((set) => ({
     isSelectableCustomers: false,
     filePath: "",
     fileName: "",
+    folders: [
+        {
+            folderName: "Olay Yeri Evrakları",
+            folderPath: "/crime-scene-documents"
+        },
+        {
+            folderName: "Ekspertiz Evrakları",
+            folderPath: "/expertise-documents"
+        },
+        {
+            folderName: "Onarım Evrakları",
+            folderPath: "/repair-documents"
+        },
+        {
+            folderName: "Kapanış Evrakları",
+            folderPath: "/closing-documents"
+        },
+    ],
 
     setFilePath: (param?: string) => set(() => {
         return {

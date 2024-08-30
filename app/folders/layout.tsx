@@ -1,21 +1,20 @@
 "use client"
 
 import React, {useState} from 'react';
-
-import {useRouter} from 'next/navigation'
 import {Button} from "@/components/ui/button";
-import { IoArrowBackCircle } from "react-icons/io5";
+import {IoArrowBackCircle} from "react-icons/io5";
+import {useRouter} from "next/navigation";
 
 interface LayoutProps {
     children: React.ReactNode;
 }
-const CustomerLayout = ({
-    children
-}: LayoutProps) => {
+
+const FolderLayout = ({children}:LayoutProps) => {
+
     const router = useRouter();
-    const [title, setTitle] = useState("")
     const handlePreviousPage = () => {
-        router.push("/");
+        const defaultPath = localStorage.getItem("defaultpath")
+        router.push(`/customer/customer-detail/${(defaultPath ||"").split("/")[0]}`);
     }
 
 
@@ -25,11 +24,11 @@ const CustomerLayout = ({
                 <Button variant="ghost" className="p-0" onClick={handlePreviousPage}>
                     <IoArrowBackCircle className="h-7 w-7"/>
                 </Button>
-                <h1 className="font-extrabold text-blue-500">{"Suvaroğlu Oto Kaporta"}</h1>
+                <h1 className="font-extrabold text-blue-500">Suvaroğlu Oto Kaporta</h1>
             </div>
             {children}
         </div>
     );
 };
 
-export default CustomerLayout;
+export default FolderLayout;
