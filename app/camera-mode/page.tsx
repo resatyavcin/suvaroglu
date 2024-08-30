@@ -74,7 +74,6 @@ const CameraMode = () => {
     const [file, setFile] = useState<File | undefined>(undefined)
     const {filePath} = useCustomerStore()
     const {push} = useRouter();
-    const searchParams = useSearchParams()
 
     const handleTakePhoto = (data: any) => {
         setDataUri(data)
@@ -87,12 +86,6 @@ const CameraMode = () => {
             })
     }
 
-
-    useEffect(() => {
-        if(!filePath){
-            push(`/folders/${searchParams.get("folderId")}`);
-        }
-    }, []);
 
     return (
         <Suspense fallback={null}>
