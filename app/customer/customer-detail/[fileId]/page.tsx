@@ -56,7 +56,6 @@ const CustomerFile = () => {
     useEffect(() => {
         if(mediaMutation.isSuccess){
             const verifyContents:any[] = mediaMutation.data.data.filter((item:any, index:number) => (item.name as string).includes("verifyKM"))[0]
-
             if(verifyContents){
                 setVerifyContentMedia(verifyContents as any)
             }

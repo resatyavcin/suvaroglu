@@ -19,11 +19,9 @@ export const getMedias = async (filePath: string) => {
     }).filter((content: any) => content !== "")
 
     for (const mediaString of medias) {
-
-        console.log(filePath + mediaString)
         const object = new GetObjectCommand({
             Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
-            Key: filePath + "/" + mediaString
+            Key: mediaString !== "verifyKM.jpeg" ? (filePath + "/" + mediaString) : (filePath + mediaString)
         });
         urls.push({
             url: await getSignedUrl(s3(), object),

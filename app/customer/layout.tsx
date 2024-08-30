@@ -25,7 +25,7 @@ const CustomerLayout = ({
                 <Button variant="ghost" className="p-0" onClick={handlePreviousPage}>
                     <IoArrowBackCircle className="h-7 w-7"/>
                 </Button>
-                <h1 className="font-extrabold text-blue-500">{"Suvaroğlu Oto Kaporta"}</h1>
+                <h1 className="font-extrabold text-blue-500">Suvaroglu</h1>
             </div>
             {children}
         </div>
