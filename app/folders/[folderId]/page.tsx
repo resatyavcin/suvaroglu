@@ -72,14 +72,14 @@ const FolderPage = () => {
     }
 
     const handleShareButton = async (urls: string[]) => {
-        // const arr = []
-        //
-        // for (let i = 0; i < urls.length; i++) {
-        //     arr.push(await urlToObject(urls[i]))
-        // }
+        const arr = []
+
+        for (let i = 0; i < urls.length; i++) {
+            arr.push(await urlToObject(urls[i]))
+        }
 
         const data = {
-            files: [...selectedFiles, await urlToObject(urls[0])]
+            files: arr
         };
 
         console.log(data)
