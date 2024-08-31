@@ -71,18 +71,22 @@ const FolderPage = () => {
         return new File([blob], 'image.png', {type: blob.type});
     }
 
-    const handleShareButton = async (url: string) => {
-        const arr = []
+    const handleShareButton = async (urls: string[]) => {
 
-        // for (let i = 0; i < urls.length; i++) {
-        //     arr.push(await urlToObject(urls[i]))
-        // }
-
+        console.log(urls);
         if(selectedFiles.length > 0) {
-            const data = {
-                files: [await urlToObject(url)]
-            };
 
+            const arr = []
+
+            for (let i = 0; i < urls.length; i++) {
+                arr.push(await urlToObject(urls[i]))
+            }
+
+            console.log(arr);
+
+            const data = {
+                files: arr
+            };
             navigator.share(data).then(() => {
                 console.log('Successful share');
             }).catch((error) => {
