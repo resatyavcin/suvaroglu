@@ -57,7 +57,12 @@ const FolderPage = () => {
             text: 'This is the first item',
             url: 'https://example.com/item1',
         };
-        navigator.canShare(data);
+        navigator.share(data).then(() => {
+            console.log('Successful share');
+        }).catch((error) => {
+            console.log('Error sharing:', error);
+        });
+
     }
 
     const mediaMutation = useMutation({
