@@ -13,6 +13,7 @@ import {useParams} from "next/navigation";
 import {IoCameraSharp} from "react-icons/io5";
 import Link from "next/link";
 import {Tabs, TabsList,TabsTrigger,TabsContent} from "@/components/ui/tabs";
+import {Checkbox} from "@/components/ui/checkbox";
 
 
 const FolderPage = () => {
@@ -21,6 +22,8 @@ const FolderPage = () => {
     const [medias, setMedias] = useState([])
 
     const {filePath, setFilePath,folders} = useCustomerStore();
+    const [selectedFiles, setSelectedFiles] = useState<any[]>([])
+
     const params = useParams();
 
     const mutation = useMutation({
@@ -59,15 +62,17 @@ const FolderPage = () => {
         return file;
     }
 
-    const handleShareButton = async (url: any) => {
+    const handleShareButton = async (urls: any) => {
         const arr = []
-        arr.push(await urlToObject(url))
+
+        for (const url in urls) {
+            arr.push(await urlToObject(url))
+        }
+
         const data = {
-            title: 'Item 1',
-            text: 'This is the first item',
-            url: 'https://example.com/item1',
             files: arr,
         };
+        console.log(arr)
         navigator.share(data).then(() => {
             console.log('Successful share');
         }).catch((error) => {
@@ -143,6 +148,10 @@ const FolderPage = () => {
 
             </div>
 
+            <Button onClick={()=>handleShareButton(selectedFiles)}>
+                Share
+            </Button>
+
 
             <div className="my-5">
                 {mutation.isError && <FormError message={(mutation.error.message as any)}/>}
@@ -173,14 +182,19 @@ const FolderPage = () => {
                             <PhotoProvider>
                                 {
                                     medias?.filter((item: any) => !item.name.includes("verifyKM") && !(item.name as string).includes(".pdf")).map((item: any, i) => {
-                                        return <PhotoView src={item.url} key={i}>
-                                            <>
+                                        return <>
+                                            <Checkbox
+                                                className="w-6 h-6 rounded-full"
+                                                // checked={}
+                                                onCheckedChange={(value) => {
+                                                    console.log(value)
+                                                    setSelectedFiles([...selectedFiles, item.url])
+                                                }}
+                                            />
+                                            <PhotoView src={item.url} key={i}>
                                                 <img src={item.url} alt=""/>
-                                                <Button onClick={()=>handleShareButton(item.url)}>
-                                                        Gönder
-                                                </Button>
-                                            </>
-                                        </PhotoView>
+                                            </PhotoView>
+                                        </>
                                     })
                                 }
                             </PhotoProvider>
