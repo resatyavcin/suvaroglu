@@ -54,20 +54,20 @@ const FolderPage = () => {
 
 
     const urlToObject= async(url:any)=> {
+        console.log(url)
 
         const response = await fetch(url);
+        console.log(response)
         const blob = await response.blob();
         const file = new File([blob], 'image.jpg', {type: "image/jpeg"});
-
-        console.log(file)
         return file;
     }
 
     const handleShareButton = async (urls: any) => {
         const arr = []
 
-        for (const url in urls) {
-            arr.push(await urlToObject(url))
+        for (let i = 0; i < urls.length; i++) {
+            arr.push(await urlToObject(urls[i]))
         }
 
         const data = {
