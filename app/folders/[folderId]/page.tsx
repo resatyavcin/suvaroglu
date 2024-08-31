@@ -65,39 +65,33 @@ const FolderPage = () => {
     }
 
 
-    const urlToObject= async(url:any)=> {
-        const response = await fetch(url);
-        const blob = await response.blob();
+    const urlToObject = async (url:string) => {
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            return new File([blob], 'image.png', { type: blob.type });
+        } catch (error) {
+            console.error('Dosya indirilemedi:', error);
+            throw error;
+        }
+    };
 
-        return new File([blob], 'image.png', {type: blob.type});
-    }
-
-    const handleShareButton = async (urls: string[]) => {
-
-
-        console.log(urls);
-        if(selectedFiles.length > 0) {
-
-            // const arr = []
-
-            // for (let i = 0; i < urls.length; i++) {
-            //     arr.push(await urlToObject(urls[i]))
-            // }
-
-
-
-            const data = {
-                files: [await urlToObject(urls[0])]
-            };
-
-            setText(navigator.canShare(data) ? "Evet": "Hayır")
-
-            navigator.share(data).then(() => {
-                console.log('Successful share');
-            }).catch((error) => {
-                console.log('Error sharing:', error);
-            });
-
+    const handleShareButton = async (url:string) => {
+        if (navigator.share) {
+            try {
+                const file = await urlToObject(url);
+                const data = {
+                    files: [file],
+                    title: 'Paylaşım Başlığı',
+                    text: 'Bu dosyayı paylaşın.',
+                };
+                await navigator.share(data);
+                console.log('Başarılı paylaşım');
+            } catch (error) {
+                console.error('Paylaşım hatası:', error);
+            }
+        } else {
+            console.log('Bu tarayıcı paylaşımı desteklemiyor.');
         }
     }
 
@@ -185,7 +179,7 @@ const FolderPage = () => {
                     </Button>
                 }
             </form>
-            <Button onClick={()=>handleShareButton(selectedFiles)}>
+            <Button onClick={()=>handleShareButton(selectedFiles[0])}>
                 Share
             </Button>
 
