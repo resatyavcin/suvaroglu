@@ -66,9 +66,11 @@ const FolderPage = () => {
 
 
     const urlToObject = async (url:string) => {
-        try {
-            const response = await fetch(url, { mode: 'no-cors' });
+        try {console.log(url)
+            const response = await fetch("https://suvaroglu.s3.eu-north-1.amazonaws.com/4a28051a-4002-428f-ba6d-f9cb28c68c23/Re%C5%9Fat-YAV%C3%87%C4%B0N-Hundai-20000/contents/crime-scene-documents/photos.png");
+            console.log(response);
             const blob = await response.blob();
+
             return new File([blob], 'image.png', { type: blob.type });
         } catch (error) {
             console.error('Dosya indirilemedi:', error);
@@ -80,14 +82,10 @@ const FolderPage = () => {
         if (navigator.share && url) {
             try {
                 const file = await urlToObject(url);
-
+    console.log(file);
                 const data = {
-                    files: [file],
-                    title: 'Paylaşım Başlığı',
-                    text: 'Bu dosyayı paylaşın.',
+                    files: [file]
                 };
-                console.log('"qefew"');
-
                 await navigator.share(data);
                 console.log('Başarılı paylaşım');
             } catch (error) {

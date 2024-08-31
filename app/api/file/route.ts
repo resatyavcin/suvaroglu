@@ -13,8 +13,11 @@ export async function POST(req: NextRequest) {
     const filePath = formData.get("filePath") as string;
     const fileNameSave = formData.get("fileName") as string;
 
+    console.log("file",file);
+    console.log("fileList",fileList);
+
     try {
-        if(!file || !fileList){
+        if(!fileList){
             return NextResponse.json({error: "File is required"}, {status: 400});
         }
 
