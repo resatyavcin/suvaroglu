@@ -5,7 +5,6 @@ import {useParams} from 'next/navigation'
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
 import {useMutation, useQuery} from "@tanstack/react-query";
-import { IoCameraSharp } from "react-icons/io5";
 import Link from "next/link";
 import {PhotoProvider, PhotoView} from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';

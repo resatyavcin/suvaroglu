@@ -14,6 +14,7 @@ import {IoCameraSharp} from "react-icons/io5";
 import Link from "next/link";
 import {Tabs, TabsList,TabsTrigger,TabsContent} from "@/components/ui/tabs";
 import {forEach} from "obliterator";
+import {EmailShareButton, WhatsappIcon, WhatsappShareButton} from "react-share";
 
 const FolderPage = () => {
     const [file, setFile] = useState()
@@ -135,6 +136,7 @@ const FolderPage = () => {
                 }
             </form>
 
+
             <Tabs defaultValue="photos" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="photos">Fotoğraflar</TabsTrigger>
@@ -147,7 +149,15 @@ const FolderPage = () => {
                                 {
                                     medias?.filter((item: any) => !item.name.includes("verifyKM") && !(item.name as string).includes(".pdf")).map((item: any, i) => {
                                         return <PhotoView src={item.url} key={i}>
-                                            <img src={item.url} alt=""/>
+                                            <>
+                                                <img src={item.url} alt=""/>
+                                                <WhatsappShareButton title={"ewf"} separator={"ewf"} url={item.url}>
+                                                    Gönder
+                                                </WhatsappShareButton>
+                                                <EmailShareButton title={"ewf"} separator={"ewf"} url={item.url}>
+                                                    Gönder Email
+                                                </EmailShareButton>
+                                            </>
                                         </PhotoView>
                                     })
                                 }
