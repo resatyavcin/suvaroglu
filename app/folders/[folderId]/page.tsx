@@ -13,8 +13,7 @@ import {useParams} from "next/navigation";
 import {IoCameraSharp} from "react-icons/io5";
 import Link from "next/link";
 import {Tabs, TabsList,TabsTrigger,TabsContent} from "@/components/ui/tabs";
-import {forEach} from "obliterator";
-import {EmailShareButton, WhatsappIcon, WhatsappShareButton} from "react-share";
+
 
 const FolderPage = () => {
     const [file, setFile] = useState()
@@ -51,11 +50,22 @@ const FolderPage = () => {
     })
 
 
-    const handleShareButton = () => {
+    const urlToObject= async(url:any)=> {
+        const response = await fetch(url);
+        // here image is url/location of image
+        const blob = await response.blob();
+        const file = new File([blob], 'image.jpg', {type: blob.type});
+        console.log(file);
+
+        return file;
+    }
+
+    const handleShareButton = (url: any) => {
         const data = {
             title: 'Item 1',
             text: 'This is the first item',
             url: 'https://example.com/item1',
+            file: urlToObject(url),
         };
         navigator.share(data).then(() => {
             console.log('Successful share');
@@ -165,7 +175,7 @@ const FolderPage = () => {
                                         return <PhotoView src={item.url} key={i}>
                                             <>
                                                 <img src={item.url} alt=""/>
-                                                <Button onClick={()=>handleShareButton()}>
+                                                <Button onClick={()=>handleShareButton(item.url)}>
                                                         Gönder
                                                 </Button>
                                             </>
