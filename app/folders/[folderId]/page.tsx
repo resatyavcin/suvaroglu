@@ -57,9 +57,9 @@ const FolderPage = () => {
         console.log(url)
 
         const response = await fetch(url);
-        console.log(response)
         const blob = await response.blob();
-        const file = new File([blob], 'image.jpg', {type: "image/jpeg"});
+
+        const file = new File([blob], 'image.jpg', {type: blob.type});
         return file;
     }
 
