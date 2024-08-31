@@ -51,6 +51,15 @@ const FolderPage = () => {
     })
 
 
+    const handleShareButton = () => {
+        const data = {
+            title: 'Item 1',
+            text: 'This is the first item',
+            url: 'https://example.com/item1',
+        };
+        navigator.canShare(data);
+    }
+
     const mediaMutation = useMutation({
         mutationFn: async (values:any) => {
             const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/medias`, {
@@ -151,12 +160,9 @@ const FolderPage = () => {
                                         return <PhotoView src={item.url} key={i}>
                                             <>
                                                 <img src={item.url} alt=""/>
-                                                <WhatsappShareButton title={"ewf"} separator={"ewf"} url={item.url}>
-                                                    Gönder
-                                                </WhatsappShareButton>
-                                                <EmailShareButton title={"ewf"} separator={"ewf"} url={item.url}>
-                                                    Gönder Email
-                                                </EmailShareButton>
+                                                <Button onClick={()=>handleShareButton()}>
+                                                        Gönder
+                                                </Button>
                                             </>
                                         </PhotoView>
                                     })
