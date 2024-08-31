@@ -56,16 +56,17 @@ const FolderPage = () => {
         const blob = await response.blob();
         const file = new File([blob], 'image.jpg', {type: blob.type});
         console.log(file);
-
         return file;
     }
 
-    const handleShareButton = (url: any) => {
+    const handleShareButton = async (url: any) => {
+        const arr = []
+        arr.push(await urlToObject(url))
         const data = {
             title: 'Item 1',
             text: 'This is the first item',
             url: 'https://example.com/item1',
-            file: urlToObject(url),
+            files: arr,
         };
         navigator.share(data).then(() => {
             console.log('Successful share');
