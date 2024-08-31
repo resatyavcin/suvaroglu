@@ -54,11 +54,12 @@ const FolderPage = () => {
 
 
     const urlToObject= async(url:any)=> {
+
         const response = await fetch(url);
-        // here image is url/location of image
         const blob = await response.blob();
-        const file = new File([blob], 'image.jpg', {type: blob.type});
-        console.log(file);
+        const file = new File([blob], 'image.jpg', {type: "image/jpeg"});
+
+        console.log(file)
         return file;
     }
 
@@ -72,7 +73,6 @@ const FolderPage = () => {
         const data = {
             files: arr,
         };
-        console.log(arr)
         navigator.share(data).then(() => {
             console.log('Successful share');
         }).catch((error) => {
