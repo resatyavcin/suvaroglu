@@ -23,6 +23,7 @@ const FolderPage = () => {
 
     const {filePath, setFilePath,folders} = useCustomerStore();
     const [selectedFiles, setSelectedFiles] = useState<any[]>([])
+    const [text, setText] = useState("")
 
     const params = useParams();
 
@@ -73,6 +74,7 @@ const FolderPage = () => {
 
     const handleShareButton = async (urls: string[]) => {
 
+
         console.log(urls);
         if(selectedFiles.length > 0) {
 
@@ -83,9 +85,13 @@ const FolderPage = () => {
             // }
 
 
+
             const data = {
                 files: [await urlToObject(urls[0])]
             };
+
+            setText(navigator.canShare(data) ? "Evet": "Hayır")
+
             navigator.share(data).then(() => {
                 console.log('Successful share');
             }).catch((error) => {
@@ -167,7 +173,7 @@ const FolderPage = () => {
                 {mutation.isError && <FormError message={(mutation.error.message as any)}/>}
                 {mutation.isSuccess && <FormSuccess message={(mutation.data.message as any)}/>}
             </div>
-
+            {JSON.stringify(text)}
             <form className="mt-6">
                 {openFileUpload &&
                     <Input multiple={true} className={file ? "mt-3" : "my-3"} onChange={handleUploadLocalFile}
