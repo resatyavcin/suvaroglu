@@ -72,7 +72,7 @@ export const listFolders = async ({customerName, customerSurname}: {customerName
                 nextMarker: (dynamoReturnData?.LastEvaluatedKey as any)?.customerId?.S,
                 id: content.customerId,
                 header: content.customerName + " " + content.customerSurname,
-                description:  content.customerVehicle + " • " + new Intl.NumberFormat('tr-TR', { style: "decimal" }).format( content.customerVehicleKM),
+                description:  content.customerVehicle + " • " + content.customerVehicleKM,
             }
         });
     }catch (err){

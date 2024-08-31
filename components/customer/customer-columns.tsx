@@ -16,7 +16,7 @@ type TCustomerColumn = (
 
 export const columns: TCustomerColumn = (selectCustomers, unselectCustomers, isSelectable) => ([
     {
-        id: "customerId",
+        id: "id",
         cell: ({ row }) => {
             return (
                 <div className="flex items-center gap-x-3">

@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react";
 
-import {Table, TableBody, TableCell, TableRow} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHeader, TableRow} from "@/components/ui/table";
 import {columns} from "@/components/customer/customer-columns";
 
 import {
@@ -63,7 +63,7 @@ const CustomerTable = ({isOpen}: any) => {
     );
 
     const table = useReactTable({
-        data: query.isSuccess && query.data.data as any,
+        data: query.isSuccess ? query.data.data as any : [],
         columns: columns(selectCustomers, unselectCustomers, isSelectableCustomers),
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
@@ -87,49 +87,67 @@ const CustomerTable = ({isOpen}: any) => {
         }
     }, [isOpen]);
 
-
-    return (
-        <div>
-            <CustomerFilterForm setFilterValues={setFilterValues} refetch={query.refetch()}/>
-
-            <h2 className={"font-bold text-sm my-2 mx-4"}>Son 30 Müşteri</h2>
-            <Separator/>
+    if (query.isLoading) {
+        return (
             <Table>
                 <TableBody>
-                    {query.isSuccess && table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.original.id}
-                                data-state={row.getIsSelected() && "selected"}
-                                className="custom-no-select"
-                                {...attrs}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell
-                                colSpan={columns.length}
-                                className="h-24 text-center"
-                            >
-                                Sonuç bulunamadı.
-                            </TableCell>
-                        </TableRow>
-                    )}
+                    <TableRow>
+                        <TableCell colSpan={columns.length} className="h-24 text-center">
+                            Yükleniyor...
+                        </TableCell>
+                    </TableRow>
                 </TableBody>
-
             </Table>
 
-        </div>
-    );
+        );
+    }
+
+
+    if (query.isSuccess) {
+        return (
+            <div>
+                <CustomerFilterForm setFilterValues={setFilterValues} refetch={query.refetch()}/>
+
+                <h2 className={"font-bold text-sm my-2 mx-4"}>Son 30 Müşteri</h2>
+                <Separator/>
+                <Table>
+                    <TableBody>
+                        {query?.isSuccess && table?.getRowModel()?.rows?.length > 0 ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.original.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                    className="custom-no-select"
+                                    {...attrs}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
+                                    Sonuç bulunamadı.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+
+                </Table>
+
+            </div>
+        );
+    }
+
 };
 
 export default CustomerTable;
