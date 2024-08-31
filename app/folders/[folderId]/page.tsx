@@ -76,16 +76,15 @@ const FolderPage = () => {
         console.log(urls);
         if(selectedFiles.length > 0) {
 
-            const arr = []
+            // const arr = []
 
-            for (let i = 0; i < urls.length; i++) {
-                arr.push(await urlToObject(urls[i]))
-            }
+            // for (let i = 0; i < urls.length; i++) {
+            //     arr.push(await urlToObject(urls[i]))
+            // }
 
-            console.log(arr);
 
             const data = {
-                files: arr
+                files: [await urlToObject(urls[0])]
             };
             navigator.share(data).then(() => {
                 console.log('Successful share');
@@ -180,7 +179,7 @@ const FolderPage = () => {
                     </Button>
                 }
             </form>
-            <Button onClick={()=>handleShareButton(selectedFiles as any)}>
+            <Button onClick={()=>handleShareButton(selectedFiles)}>
                 Share
             </Button>
 
