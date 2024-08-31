@@ -71,15 +71,15 @@ const FolderPage = () => {
         return new File([blob], 'image.png', {type: blob.type});
     }
 
-    const handleShareButton = async (urls: string[]) => {
+    const handleShareButton = async (url: string) => {
         const arr = []
 
-        for (let i = 0; i < urls.length; i++) {
-            arr.push(await urlToObject(urls[i]))
-        }
+        // for (let i = 0; i < urls.length; i++) {
+        //     arr.push(await urlToObject(urls[i]))
+        // }
 
         const data = {
-            files: arr
+            files: [await urlToObject(url)]
         };
 
         console.log(data)
@@ -158,10 +158,6 @@ const FolderPage = () => {
 
             </div>
 
-            <Button onClick={()=>handleShareButton(selectedFiles)}>
-                Share
-            </Button>
-
 
             <div className="my-5">
                 {mutation.isError && <FormError message={(mutation.error.message as any)}/>}
@@ -201,6 +197,9 @@ const FolderPage = () => {
                                                     setSelectedFiles([...selectedFiles, item.url])
                                                 }}
                                             />
+                                            <Button onClick={()=>handleShareButton(item.url)}>
+                                                Share
+                                            </Button>
                                             <PhotoView src={item.url} key={i}>
                                                 <img src={item.url} alt=""/>
                                             </PhotoView>
