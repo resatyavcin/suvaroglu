@@ -78,17 +78,18 @@ const FolderPage = () => {
         //     arr.push(await urlToObject(urls[i]))
         // }
 
-        const data = {
-            files: [await urlToObject(url)]
-        };
+        if(selectedFiles.length > 0) {
+            const data = {
+                files: [await urlToObject(url)]
+            };
 
-        console.log(data)
-        navigator.share(data).then(() => {
-            console.log('Successful share');
-        }).catch((error) => {
-            console.log('Error sharing:', error);
-        });
+            navigator.share(data).then(() => {
+                console.log('Successful share');
+            }).catch((error) => {
+                console.log('Error sharing:', error);
+            });
 
+        }
     }
 
     const mediaMutation = useMutation({
@@ -175,7 +176,9 @@ const FolderPage = () => {
                     </Button>
                 }
             </form>
-
+            <Button onClick={()=>handleShareButton(selectedFiles as any)}>
+                Share
+            </Button>
 
             <Tabs defaultValue="photos" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
@@ -197,9 +200,6 @@ const FolderPage = () => {
                                                     setSelectedFiles([...selectedFiles, item.url])
                                                 }}
                                             />
-                                            <Button onClick={()=>handleShareButton(item.url)}>
-                                                Share
-                                            </Button>
                                             <PhotoView src={item.url} key={i}>
                                                 <img src={item.url} alt=""/>
                                             </PhotoView>
