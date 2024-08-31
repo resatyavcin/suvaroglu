@@ -12,7 +12,7 @@ import {useCustomerStore} from "@/store";
 import {useParams} from "next/navigation";
 import {IoCameraSharp} from "react-icons/io5";
 import Link from "next/link";
-import {Tabs, TabsList,TabsTrigger,TabsContent} from "@/components/ui/tabs";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Checkbox} from "@/components/ui/checkbox";
 
 
@@ -53,26 +53,36 @@ const FolderPage = () => {
     })
 
 
-    const urlToObject= async(url:any)=> {
-        console.log(url)
+    function createFileList(files: File[]) {
+        const dataTransfer = new DataTransfer();
 
+        files.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+
+        return dataTransfer.files;
+    }
+
+
+    const urlToObject= async(url:any)=> {
         const response = await fetch(url);
         const blob = await response.blob();
 
-        const file = new File([blob], 'image.jpg', {type: blob.type});
-        return file;
+        return new File([blob], 'image.png', {type: blob.type});
     }
 
-    const handleShareButton = async (urls: any) => {
-        const arr = []
-
-        for (let i = 0; i < urls.length; i++) {
-            arr.push(await urlToObject(urls[i]))
-        }
+    const handleShareButton = async (urls: string[]) => {
+        // const arr = []
+        //
+        // for (let i = 0; i < urls.length; i++) {
+        //     arr.push(await urlToObject(urls[i]))
+        // }
 
         const data = {
-            files: arr,
+            files: [...selectedFiles, await urlToObject(urls[0])]
         };
+
+        console.log(data)
         navigator.share(data).then(() => {
             console.log('Successful share');
         }).catch((error) => {
