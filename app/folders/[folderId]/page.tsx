@@ -67,7 +67,7 @@ const FolderPage = () => {
 
     const urlToObject = async (url:string) => {
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { mode: 'no-cors' });
             const blob = await response.blob();
             return new File([blob], 'image.png', { type: blob.type });
         } catch (error) {
@@ -77,14 +77,17 @@ const FolderPage = () => {
     };
 
     const handleShareButton = async (url:string) => {
-        if (navigator.share) {
+        if (navigator.share && url) {
             try {
                 const file = await urlToObject(url);
+
                 const data = {
                     files: [file],
                     title: 'Paylaşım Başlığı',
                     text: 'Bu dosyayı paylaşın.',
                 };
+                console.log('"qefew"');
+
                 await navigator.share(data);
                 console.log('Başarılı paylaşım');
             } catch (error) {
