@@ -7,13 +7,14 @@ import {PhotoProvider, PhotoView} from "react-photo-view";
 import {useMutation} from "@tanstack/react-query";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
-import {FaFileArrowUp} from "react-icons/fa6";
+import {FaFileArrowUp, FaShare} from "react-icons/fa6";
 import {useCustomerStore} from "@/store";
 import {useParams} from "next/navigation";
 import {IoCameraSharp} from "react-icons/io5";
 import Link from "next/link";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Checkbox} from "@/components/ui/checkbox";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
 
 
 const FolderPage = () => {
@@ -23,7 +24,6 @@ const FolderPage = () => {
 
     const {filePath, setFilePath,folders} = useCustomerStore();
     const [selectedFiles, setSelectedFiles] = useState<any[]>([])
-    const [text, setText] = useState("")
 
     const params = useParams();
 
@@ -66,8 +66,9 @@ const FolderPage = () => {
 
 
     const urlToObject = async (url:string) => {
-        try {console.log(url)
-            const response = await fetch("https://suvaroglu.s3.eu-north-1.amazonaws.com/4a28051a-4002-428f-ba6d-f9cb28c68c23/Re%C5%9Fat-YAV%C3%87%C4%B0N-Hundai-20000/contents/crime-scene-documents/photos.png");
+        try {
+            console.log(url)
+            const response = await fetch(url);
             console.log(response);
             const blob = await response.blob();
 
@@ -78,14 +79,24 @@ const FolderPage = () => {
         }
     };
 
-    const handleShareButton = async (url:string) => {
-        if (navigator.share && url) {
+    const handleShareButton = async (urls:string[]) => {
+        if (navigator.share && urls.length > 0) {
             try {
-                const file = await urlToObject(url);
-    console.log(file);
+                console.log(urls)
+
+                const filePaths = [];
+
+                for (let x = 0; x < urls.length; x++) {
+                    const file = await urlToObject(urls[x]);
+                    filePaths.push(file)
+                }
+
                 const data = {
-                    files: [file]
+                    files: filePaths
                 };
+
+                console.log(filePaths)
+
                 await navigator.share(data);
                 console.log('Başarılı paylaşım');
             } catch (error) {
@@ -149,6 +160,13 @@ const FolderPage = () => {
 
 
                 <div className={"my-4"}>
+
+                    {
+                        selectedFiles.length >0 && <Button className="mr-4" onClick={()=>handleShareButton(selectedFiles)}>
+                            <FaShare/>
+                        </Button>
+                    }
+
                     <Button className="mr-4" onClick={() => setOpenFileUpload(!openFileUpload)}>
                         <FaFileArrowUp/>
                     </Button>
@@ -168,7 +186,6 @@ const FolderPage = () => {
                 {mutation.isError && <FormError message={(mutation.error.message as any)}/>}
                 {mutation.isSuccess && <FormSuccess message={(mutation.data.message as any)}/>}
             </div>
-            {JSON.stringify(text)}
             <form className="mt-6">
                 {openFileUpload &&
                     <Input multiple={true} className={file ? "mt-3" : "my-3"} onChange={handleUploadLocalFile}
@@ -180,9 +197,6 @@ const FolderPage = () => {
                     </Button>
                 }
             </form>
-            <Button onClick={()=>handleShareButton(selectedFiles[0])}>
-                Share
-            </Button>
 
             <Tabs defaultValue="photos" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">
@@ -190,24 +204,22 @@ const FolderPage = () => {
                     <TabsTrigger value="file">Dosyalar</TabsTrigger>
                 </TabsList>
                 <TabsContent value="photos">
-                    <div className="grid grid-cols-3 grid-rows-4 gap-4 mt-6">
+                    <div className="grid grid-cols-2 grid-rows-4 gap-6 mt-6">
                         {
                             <PhotoProvider>
                                 {
                                     medias?.filter((item: any) => !item.name.includes("verifyKM") && !(item.name as string).includes(".pdf")).map((item: any, i) => {
-                                        return <>
-                                            <Checkbox
-                                                className="w-6 h-6 rounded-full"
-                                                // checked={}
-                                                onCheckedChange={(value) => {
-                                                    console.log(value)
-                                                    setSelectedFiles([...selectedFiles, item.url])
-                                                }}
-                                            />
-                                            <PhotoView src={item.url} key={i}>
-                                                <img src={item.url} alt=""/>
-                                            </PhotoView>
-                                        </>
+                                        return <PhotoView src={item.url} key={i}>
+                                               <div className={"flex gap-x-1"}>
+                                                   <Checkbox
+                                                       className="w-6 h-6 rounded-full"
+                                                       onCheckedChange={(value) => {
+                                                           setSelectedFiles([...selectedFiles, item.url])
+                                                       }}
+                                                   />
+                                                   <img width={"80%"} src={item.url} alt=""/>
+                                               </div>
+                                        </PhotoView>
                                     })
                                 }
                             </PhotoProvider>
