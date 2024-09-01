@@ -19,7 +19,7 @@ export const getFolder = async (fileId: string) => {
 
         return {
             id,
-            filePath: content.Key,
+            filePath: content.Key?.split('/')[0] + "/" + content.Key?.split('/')[1] + "/" + content.Key?.split('/')[2] + "/",
             customer: {
                 customerName: info[0],
                 customerSurname: info[1],

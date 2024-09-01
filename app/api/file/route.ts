@@ -2,7 +2,32 @@
 
 import {NextRequest, NextResponse} from "next/server";
 import {uploadFile} from "@/actions/uploadFile";
+import {deleteFile} from "@/actions/deleteFile";
 
+export async function DELETE(req: NextRequest) {
+    const formData = await req.formData();
+    const fileList = formData.getAll("file[]") as unknown as FileList;
+    const filePath = formData.get("filePath") as string;
+
+    if (!fileList || fileList.length === 0) {
+        return NextResponse.json({ error: "No files provided for deletion" }, { status: 400 });
+    }
+
+    console.log("tttt", fileList);
+
+
+    try {
+        for (let i = 0; i < fileList.length; i++) {
+            const fileName = (fileList[i] as any).split("/").pop();
+            await deleteFile(filePath, fileName);
+        }
+
+        return NextResponse.json({ status: 200, message: "Dosya Silme Başarıyla tamamalandı." });
+    } catch (err) {
+        console.error('Error deleting files:', err);
+        return NextResponse.json({ error: err, message: "Dosya Silme Başarısız." }, { status: 400 });
+    }
+}
 
 
 export async function POST(req: NextRequest) {
@@ -13,8 +38,6 @@ export async function POST(req: NextRequest) {
     const filePath = formData.get("filePath") as string;
     const fileNameSave = formData.get("fileName") as string;
 
-    console.log("file",file);
-    console.log("fileList",fileList);
 
     try {
         if(!fileList){

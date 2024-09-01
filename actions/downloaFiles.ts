@@ -12,5 +12,4 @@ export const downloadFiles = async () => {
 
     const listFolderPromise = await s3().send(listFolder)
 
-    console.log(listFolderPromise)
 }

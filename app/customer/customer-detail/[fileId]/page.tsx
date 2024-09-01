@@ -11,6 +11,8 @@ import 'react-photo-view/dist/react-photo-view.css';
 import {useCustomerStore} from "@/store";
 import { BsSpeedometer } from "react-icons/bs";
 import CustomerFolders from "@/components/customer/customer-folders";
+import {Delete} from "lucide-react";
+import {MdDelete} from "react-icons/md";
 
 const CustomerFile = () => {
 
@@ -41,9 +43,33 @@ const CustomerFile = () => {
         },
     })
 
+    const mutationDelete = useMutation({
+        mutationFn: async (values:any) => {
+            const form_data = new FormData();
+
+            for ( let key in values ) {
+                if(key !== "file") {
+                    form_data.append(key, values[key]);
+                }
+            }
+
+            for (var x = 0; x < values.file.length; x++) {
+                form_data.append("file[]", values.file[x]);
+            }
+
+            const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/file`, {
+                method: "DELETE",
+                body: form_data
+            })
+
+            return data.json()
+        },
+    })
+
 
     useEffect(() => {
         if(customerInfoData){
+            console.log(customerInfoData)
             mediaMutation.mutate({filePath: customerInfoData.data.filePath})
             setFilePath(customerInfoData.data.filePath)
             localStorage.setItem("defaultpath", customerInfoData.data.filePath)
@@ -59,7 +85,7 @@ const CustomerFile = () => {
                 setVerifyContentMedia(verifyContents as any)
             }
         }
-    }, [mediaMutation.isSuccess]);
+    }, [mediaMutation.isSuccess, mutationDelete.isSuccess]);
 
 
     return (
@@ -80,6 +106,15 @@ const CustomerFile = () => {
                         }
                     </p>
                 </div>
+
+             {   verifyContentMedia &&  <Button variant="destructive" className="mr-4" onClick={async () => {
+                mutationDelete.mutate({
+                    filePath: customerInfoData.data.filePath,
+                    file: ["verifyKM.jpeg"],
+                })
+            }}>
+                <MdDelete/>
+            </Button>}
 
                 <div>
 
