@@ -25,7 +25,7 @@ export const getMedias = async (filePath: string) => {
         console.log(mediaString !== "verifyKM.jpeg" ? ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString) : ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString))
 
         urls.push({
-            url: mediaString !== "verifyKM.jpeg" ? ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString) : ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString),
+            url: mediaString !== "verifyKM.jpeg" ? ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + "/" + mediaString) : ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString),
             name: mediaString,
         });
     }

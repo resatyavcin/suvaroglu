@@ -64,6 +64,9 @@ const CustomerFile = () => {
 
             return data.json()
         },
+        onSuccess: ()=>{
+            setVerifyContentMedia(undefined)
+        }
     })
 
 
@@ -85,7 +88,7 @@ const CustomerFile = () => {
                 setVerifyContentMedia(verifyContents as any)
             }
         }
-    }, [mediaMutation.isSuccess, mutationDelete.isSuccess]);
+    }, [mediaMutation.isSuccess]);
 
 
     return (
