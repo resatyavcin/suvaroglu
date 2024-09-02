@@ -85,14 +85,9 @@ const FolderPage = () => {
     })
 
     const urlToObject = async (url:string) => {
+        console.log(medias)
         try {
-            const response = await fetch(url, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'text/html', // HTML belgesi olduğunu belirtir
-                },
-            });
-            console.log(response)
+            const response = await fetch(url);
             const blob = await response.blob();
 
             return new File([blob], 'image.png', { type: blob.type });
