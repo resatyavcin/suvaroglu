@@ -11,7 +11,6 @@ export const uploadFile = async (file: any, fileName: any, filePath: any) => {
             Key: filePath + fileName,
             Body: file,
             ContentType: "image/png",
-            ACL: 'public-read',
     })
         return await s3().send(uploadToS3);
 

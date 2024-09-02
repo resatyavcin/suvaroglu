@@ -13,8 +13,6 @@ export async function DELETE(req: NextRequest) {
         return NextResponse.json({ error: "No files provided for deletion" }, { status: 400 });
     }
 
-    console.log("tttt", fileList);
-
 
     try {
         for (let i = 0; i < fileList.length; i++) {

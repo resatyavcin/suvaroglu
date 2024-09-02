@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import {PhotoProvider, PhotoView} from "react-photo-view";
+import { RowsPhotoAlbum } from "react-photo-album";
 import {useMutation} from "@tanstack/react-query";
 import FormError from "@/components/form-error";
 import FormSuccess from "@/components/form-success";
@@ -14,12 +14,10 @@ import {IoCameraSharp} from "react-icons/io5";
 import Link from "next/link";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Checkbox} from "@/components/ui/checkbox";
-import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {downloadFiles} from "@/actions/downloaFiles";
-import {FaFileArchive} from "react-icons/fa";
-import {DeleteIcon} from "lucide-react";
-import {AiFillDelete} from "react-icons/ai";
 import {MdDelete} from "react-icons/md";
+import Lightbox from "yet-another-react-lightbox";
+import "react-photo-album/rows.css";
+import "yet-another-react-lightbox/styles.css";
 
 
 const FolderPage = () => {
@@ -29,6 +27,7 @@ const FolderPage = () => {
 
     const {filePath, setFilePath,folders} = useCustomerStore();
     const [selectedFiles, setSelectedFiles] = useState<any[]>([])
+    const [index, setIndex] = React.useState(-1);
 
     const params = useParams();
 
@@ -55,6 +54,7 @@ const FolderPage = () => {
         },
         onSuccess:()=>{
             setFile(undefined)
+            setSelectedFiles([])
         }
     })
 
@@ -78,12 +78,21 @@ const FolderPage = () => {
             })
 
             return data.json()
+        },
+        onSuccess:()=>{
+            setSelectedFiles([])
         }
     })
 
     const urlToObject = async (url:string) => {
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'text/html', // HTML belgesi olduğunu belirtir
+                },
+            });
+            console.log(response)
             const blob = await response.blob();
 
             return new File([blob], 'image.png', { type: blob.type });
@@ -209,7 +218,6 @@ const FolderPage = () => {
         });
     };
 
-
     return (
         <div>
             <h4 className="font-bold leading-none mt-5">
@@ -276,27 +284,50 @@ const FolderPage = () => {
                     <TabsTrigger value="file">Dosyalar</TabsTrigger>
                 </TabsList>
                 <TabsContent value="photos">
-                    <div className="grid grid-cols-2 grid-rows-4 gap-6 mt-6">
-                        {
-                            <PhotoProvider>
-                                {
-                                    medias?.filter((item: any) => !item.name.includes("verifyKM") && !(item.name as string).includes(".pdf")).map((item: any, i) => {
-                                        return <PhotoView src={item.url} key={i}>
-                                            <div className={"flex gap-x-1"}>
-                                                <Checkbox
-                                                    className="w-6 h-6 rounded-full"
-                                                    onCheckedChange={(value) => {
-                                                        setSelectedFiles([...selectedFiles, item.url])
-                                                    }}
-                                                />
-                                                <img width={"80%"} src={item.url} alt=""/>
-                                            </div>
-                                        </PhotoView>
-                                    })
+
+
+                        <RowsPhotoAlbum
+
+                            photos={medias?.filter((item: any) =>
+                                        !item.name.includes("verifyKM") && !(item.name as string).includes(".pdf"))
+                                        .map((slices: any, index: number) => ({src: slices.url, width: 100, height: 100}))
+
+                            }
+                            onClick={({ index: current }) => setIndex(current)}
+                            render={{
+                                extras: (_, { photo, index }) => {
+                                    return (
+                                        <Checkbox
+                                            className="w-6 h-6 rounded-full mt-3"
+                                            checked={selectedFiles.includes(photo.src)}
+                                            onClick={(e) => e.stopPropagation()}
+                                            onCheckedChange={(value) => {
+                                                setSelectedFiles((prevSelectedFiles: any) => {
+                                                    if (!prevSelectedFiles.includes(photo.src)) {
+                                                        return [...prevSelectedFiles, photo.src];
+                                                    }
+
+                                                    return prevSelectedFiles.filter((file: any) => file !== photo.src);
+                                                });
+                                            }}
+                                        />
+                                    )
                                 }
-                            </PhotoProvider>
-                        }
-                    </div>
+                            }}
+                        />
+
+                        <Lightbox
+                            index={index}
+                            slides={medias?.filter((item: any) =>
+                                !item.name.includes("verifyKM") && !(item.name as string).includes(".pdf"))
+                                .map((slices: any, index: number) => ({src: slices.url}))
+                            }
+                            open={index >= 0}
+                            close={() => setIndex(-1)}
+                        />
+
+
+
                 </TabsContent>
                 <TabsContent value="file">
                     {
@@ -305,7 +336,14 @@ const FolderPage = () => {
                                 <Checkbox
                                     className="w-6 h-6 rounded-full"
                                     onCheckedChange={(value) => {
-                                        setSelectedFiles([...selectedFiles, item.url])
+                                        if(!selectedFiles.includes(item.url)) {
+                                            setSelectedFiles([...selectedFiles, item.url])
+                                            return;
+                                        }
+
+                                        setSelectedFiles(
+                                            selectedFiles.filter((file: any) => file !== item.url)
+                                        );
                                     }}
                                 />
                                 <FaFile className={"w-12 h-12"} key={i}/>

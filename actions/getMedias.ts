@@ -24,8 +24,14 @@ export const getMedias = async (filePath: string) => {
     for (const mediaString of medias) {
         console.log(mediaString !== "verifyKM.jpeg" ? ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString) : ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString))
 
+        const object = new GetObjectCommand({
+            Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+            Key: mediaString !== "verifyKM.jpeg" ? (filePath + "/" + mediaString) : (filePath + mediaString)
+        });
+
+
         urls.push({
-            url: mediaString !== "verifyKM.jpeg" ? ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + "/" + mediaString) : ('https://suvaroglu.s3.eu-north-1.amazonaws.com/' + filePath + mediaString),
+            url: await getSignedUrl(s3(), object),
             name: mediaString,
         });
     }

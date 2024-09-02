@@ -37,7 +37,7 @@ const useCustomerStore = create<ICustomerState>((set) => ({
     fileName: "",
     folders: [
         {
-            folderName: "Olay Yeri Evrakları",
+            folderName: "Hasar Evrakları",
             folderPath: "/crime-scene-documents"
         },
         {
