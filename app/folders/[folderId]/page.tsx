@@ -100,8 +100,9 @@ const FolderPage = () => {
 
   const download = async (urls: string[]) => {
     for (const url of urls) {
+      console.log(url);
       try {
-        const response = await fetch(url);
+        const response = await fetch(url, { cache: 'no-cache' });
         const blob = await response.blob();
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
