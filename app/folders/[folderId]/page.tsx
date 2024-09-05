@@ -88,7 +88,7 @@ const FolderPage = () => {
 
   const urlToObject = async (url: string) => {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, { cache: 'no-cache' });
       const blob = await response.blob();
 
       return new File([blob], 'image.png', { type: blob.type });

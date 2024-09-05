@@ -46,14 +46,10 @@ export const getMedias = async (filePath: string) => {
             : filePath + mediaString,
       });
 
-      const url = await getSignedUrl(s3(), object, { expiresIn: 3600 });
+      const url = await getSignedUrl(s3(), object, { expiresIn: 24 * 60 * 60 }); // 1 gün
 
       urls.push({
-        url: `https://suvaroglu.s3.eu-north-1.amazonaws.com/${
-          mediaString !== 'verifyKM.jpeg'
-            ? filePath + '/' + mediaString
-            : filePath + mediaString
-        }`,
+        url,
         name: mediaString,
       });
     }
