@@ -15,7 +15,7 @@ const authOptions = {
       return user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL;
     },
     async redirect() {
-      return 'http://localhost:3000';
+      return process.env.NEXT_PUBLIC_CLIENT_URL || '';
     },
   },
 };
