@@ -105,7 +105,7 @@ const FolderPage = () => {
         const blob = await response.blob();
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = url.split('/').pop() || '';
+        a.download = url.split('/').pop()?.split('?')[0] || '';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

@@ -11,7 +11,6 @@ import 'react-photo-view/dist/react-photo-view.css';
 import { useCustomerStore } from '@/store';
 import { BsSpeedometer } from 'react-icons/bs';
 import CustomerFolders from '@/components/customer/customer-folders';
-import { Delete } from 'lucide-react';
 import { MdDelete } from 'react-icons/md';
 import { useSession } from 'next-auth/react';
 
