@@ -1,68 +1,72 @@
-"use server"
+'use server';
 
-import {NextRequest, NextResponse} from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import {createFolder} from "@/actions/createFolder";
-import {listFolders} from "@/actions/listFolders";
-import * as z from "zod";
-import {CustomerVehicleServiceAddFormSchema} from "@/schemas";
-import {createCustomer} from "@/actions/createCustomer";
-
+import { createFolder } from '@/actions/createFolder';
+import { listFolders } from '@/actions/listFolders';
+import * as z from 'zod';
+import { CustomerVehicleServiceAddFormSchema } from '@/schemas';
+import { createCustomer } from '@/actions/createCustomer';
 
 export async function GET(request: NextRequest) {
-    try {
-        const { searchParams } = new URL(request.url);
+  try {
+    const { searchParams } = new URL(request.url);
 
-        const data = await listFolders(
-            {
-                customerName: (searchParams.get("customerName")) || "",
-                customerSurname: (searchParams.get("customerSurname")) || ""
-            }
-        )
-        return Response.json({status: 200, data: data});
-
-    }catch (err){
-        return Response.json({error: err});
-    }
+    const data = await listFolders({
+      customerName: searchParams.get('customerName') || '',
+      customerSurname: searchParams.get('customerSurname') || '',
+    });
+    return Response.json({ status: 200, data: data });
+  } catch (err) {
+    return Response.json({ error: err });
+  }
 }
 
-
 export async function POST(req: NextRequest) {
-    const body : z.infer<typeof CustomerVehicleServiceAddFormSchema> = await req.json();
-    const validatedFields = CustomerVehicleServiceAddFormSchema.safeParse(body);
+  const body: z.infer<typeof CustomerVehicleServiceAddFormSchema> =
+    await req.json();
+  const validatedFields = CustomerVehicleServiceAddFormSchema.safeParse(body);
 
-    if(!validatedFields.success){
-        return Response.json({ error: "Tip Hatası." })
-    }
+  if (!validatedFields.success) {
+    return Response.json({ error: 'Tip Hatası.' });
+  }
 
-    try {
-        const { customerName,
-            customerSurname,
-            customerVehicle,
-            customerVehicleKM
-        } = body
+  try {
+    const {
+      customerName,
+      customerSurname,
+      customerVehicle,
+      customerVehicleKM,
+    } = body;
 
+    const data: any = await createFolder({
+      customerName,
+      customerSurname,
+      customerVehicle,
+      customerVehicleKM,
+    } as any);
 
-        const data:any = await createFolder({
-            customerName,
-            customerSurname,
-            customerVehicle,
-            customerVehicleKM,
-        } as any)
+    await createCustomer({
+      customerId: data.customerId,
+      customerName,
+      customerSurname,
+      customerVehicle,
+      customerVehicleKM,
+      customerFilePath: data.filePath,
+    } as any);
 
-        await createCustomer({
-            customerId: data.customerId,
-            customerName,
-            customerSurname,
-            customerVehicle,
-            customerVehicleKM,
-            customerFilePath: data.filePath
-        } as any)
-
-
-        return NextResponse.json({status: 200, data: data.customerId, message: "Araç servise başarı ile kaydedilmiştir."})
-
-    }catch (err:any){
-        return NextResponse.json({error: JSON.stringify(err.message), message: "Araç kaydetme başarısız. Lütfen tekrar deneyiniz."}, {status: 500});
-    }
+    return NextResponse.json({
+      status: 200,
+      data: data.customerId,
+      message: 'Araç servise başarı ile kaydedilmiştir.',
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        error: JSON.stringify(err.message),
+        message: 'Araç kaydetme başarısız. Lütfen tekrar deneyiniz.',
+      },
+      { status: 500 }
+    );
+  }
 }
