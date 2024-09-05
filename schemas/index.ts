@@ -13,4 +13,7 @@ export const CustomerVehicleServiceAddFormSchema = z.object({
   customerVehicle: z.string().min(1, {
     message: 'Aracın markasını girmek zorunludur.',
   }),
+  customerVehicleNumber: z.string().min(1, {
+    message: 'Aracın plakasını girmek zorunludur.',
+  }),
 });

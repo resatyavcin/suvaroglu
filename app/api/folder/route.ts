@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
     const data = await listFolders({
       customerName: searchParams.get('customerName') || '',
-      customerSurname: searchParams.get('customerSurname') || '',
+      customerVehicleNumber: searchParams.get('customerVehicleNumber') || '',
     });
     return Response.json({ status: 200, data: data });
   } catch (err) {
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
       customerSurname,
       customerVehicle,
       customerVehicleKM,
+      customerVehicleNumber,
     } = body;
 
     const data: any = await createFolder({
@@ -44,6 +45,7 @@ export async function POST(req: NextRequest) {
       customerSurname,
       customerVehicle,
       customerVehicleKM,
+      customerVehicleNumber,
     } as any);
 
     await createCustomer({
@@ -52,6 +54,7 @@ export async function POST(req: NextRequest) {
       customerSurname,
       customerVehicle,
       customerVehicleKM,
+      customerVehicleNumber,
       customerFilePath: data.filePath,
     } as any);
 

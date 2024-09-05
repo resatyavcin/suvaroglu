@@ -40,7 +40,7 @@ const CustomerTable = ({ isOpen }: any) => {
   const query = useQuery({
     queryKey: ['customerList', filterValues],
     queryFn: async ({ queryKey }: any) => {
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/folder?customerName=${queryKey[1]?.customerName ? queryKey[1]?.customerName : ''}&customerSurname=${queryKey[1].customerSurname ? queryKey[1]?.customerSurname : ''}`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/folder?customerName=${queryKey[1]?.customerName ? queryKey[1]?.customerName : ''}&customerVehicleNumber=${queryKey[1].customerVehicleNumber ? queryKey[1]?.customerVehicleNumber : ''}`;
 
       const data = await fetch(url);
       return data.json();
@@ -110,7 +110,7 @@ const CustomerTable = ({ isOpen }: any) => {
       <div>
         <CustomerFilterForm
           setFilterValues={setFilterValues}
-          refetch={query.refetch()}
+          refetch={() => query.refetch()}
         />
 
         <h2 className={'font-bold text-sm my-2 mx-4'}>Son 30 Müşteri</h2>

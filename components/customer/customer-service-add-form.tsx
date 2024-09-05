@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 
 import { CustomerVehicleServiceAddFormSchema } from '@/schemas';
-import { useRouter } from 'next/navigation';
 
 import {
   Form,
@@ -21,7 +20,6 @@ import {
 import { Button } from '@/components/ui/button';
 import FormError from '@/components/form-error';
 import FormSuccess from '@/components/form-success';
-import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 
@@ -46,8 +44,6 @@ const CustomerServiceAddForm = () => {
     },
   });
 
-  const [open, setOpen] = useState<boolean>(false);
-
   const form = useForm<z.infer<typeof CustomerVehicleServiceAddFormSchema>>({
     resolver: zodResolver(CustomerVehicleServiceAddFormSchema),
     defaultValues: {
@@ -55,9 +51,9 @@ const CustomerServiceAddForm = () => {
       customerSurname: '',
       customerVehicle: '',
       customerVehicleKM: '',
+      customerVehicleNumber: '',
     },
   });
-  const router = useRouter();
 
   const onSubmit = (
     values: z.infer<typeof CustomerVehicleServiceAddFormSchema>
@@ -145,6 +141,24 @@ const CustomerServiceAddForm = () => {
                       {...field}
                       disabled={mutation.isPending}
                       type="number"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="customerVehicleNumber"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Araç Plaka</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={mutation.isPending}
+                      type="text"
                     />
                   </FormControl>
                   <FormMessage />

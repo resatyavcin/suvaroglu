@@ -4,6 +4,7 @@ export type TCustomer = {
   customerSurname: string;
   customerVehicle: string;
   customerVehicleKM: number;
+  customerVehicleNumber: string;
   isChecked: boolean;
 };
 

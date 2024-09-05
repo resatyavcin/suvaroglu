@@ -8,12 +8,10 @@ import { Button } from '@/components/ui/button';
 import { IoAddSharp } from 'react-icons/io5';
 import { useClickAway } from '@uidotdev/usehooks';
 import { useEffect } from 'react';
-import { CustomerAlertDialog } from '@/components/customer/customer-alert';
-import { useCustomerStore } from '@/store';
+
 import CustomerActions from '@/components/customer/customer-actions';
 
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 

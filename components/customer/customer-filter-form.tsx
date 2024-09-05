@@ -6,21 +6,17 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import * as z from 'zod';
-import { CustomerVehicleServiceAddFormSchema } from '@/schemas';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 
 const CustomerFilterForm = ({ setFilterValues, refetch }: any) => {
   const form = useForm({
     defaultValues: {
       customerName: '',
-      customerSurname: '',
+      customerVehicleNumber: '',
     },
   });
 
@@ -53,12 +49,12 @@ const CustomerFilterForm = ({ setFilterValues, refetch }: any) => {
               />
 
               <FormField
-                name="customerSurname"
+                name="customerVehicleNumber"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder={'Soyad'} {...field} type="search" />
+                      <Input placeholder={'Plaka'} {...field} type="search" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

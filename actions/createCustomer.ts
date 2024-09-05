@@ -6,12 +6,17 @@ import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { docClient } from '@/constants/dynamo';
 import { TCustomer } from '@/constants';
 
+function removeSpaces(str: string) {
+  return str.replace(/\s+/g, '');
+}
+
 export const createCustomer = async ({
   customerId,
   customerName,
   customerSurname,
   customerVehicle,
   customerVehicleKM,
+  customerVehicleNumber,
   customerFilePath,
 }: TCustomer & { customerFilePath: string }) => {
   try {
@@ -25,6 +30,10 @@ export const createCustomer = async ({
         customerSurnameFilter: customerSurname.toLowerCase(),
         customerVehicle,
         customerVehicleKM,
+        customerVehicleNumber,
+        customerVehicleNumberFilter: removeSpaces(
+          customerVehicleNumber.toLowerCase()
+        ),
         customerFilePath,
         customerDate: new Date().toISOString(),
       },

@@ -9,10 +9,10 @@ interface ExpressionAttributeValues {
 
 export const listFolders = async ({
   customerName,
-  customerSurname,
+  customerVehicleNumber,
 }: {
   customerName: string;
-  customerSurname: string;
+  customerVehicleNumber: string;
 }) => {
   try {
     const paramsWithExclusiveStartKey: {
@@ -39,13 +39,14 @@ export const listFolders = async ({
       };
     }
 
-    if (customerSurname) {
+    if (customerVehicleNumber) {
       if (filterExpression) {
         filterExpression += ' AND ';
       }
-      filterExpression += 'contains(customerSurnameFilter, :statusValue2)';
+      filterExpression +=
+        'contains(customerVehicleNumberFilter, :statusValue2)';
       expressionAttributeValues[':statusValue2'] = {
-        S: customerSurname.toLowerCase(),
+        S: customerVehicleNumber.toLowerCase(),
       };
     }
 
