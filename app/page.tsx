@@ -13,7 +13,7 @@ import CustomerActions from '@/components/customer/customer-actions';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 export default function Home() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -29,6 +29,10 @@ export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  const handleSignOut = async () => {
+    await signOut({ redirect: false });
+  };
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/auth');
@@ -42,7 +46,15 @@ export default function Home() {
   if (session) {
     return (
       <div>
-        <div className="flex items-center justify-between h-full my-5 mx-3">
+        <Button
+          onClick={handleSignOut}
+          size={'sm'}
+          className="float-right mr-2"
+          variant={'secondary'}
+        >
+          Çıkış Yap
+        </Button>
+        <div className="flex flex-col h-full my-5 mx-3">
           <h2 className="font-extrabold text-xl text-blue-500">Suvaroglu</h2>
           <CustomerActions />
         </div>

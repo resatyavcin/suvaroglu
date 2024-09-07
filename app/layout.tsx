@@ -7,6 +7,8 @@ import * as React from 'react';
 const inter = Inter({ subsets: ['latin'] });
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { SessionProvider } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+
 const queryClient = new QueryClient();
 
 export default function RootLayout({

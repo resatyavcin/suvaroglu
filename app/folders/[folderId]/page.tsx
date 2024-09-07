@@ -8,11 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import FormError from '@/components/form-error';
 import FormSuccess from '@/components/form-success';
 import { FaDownload, FaFile, FaFileArrowUp, FaShare } from 'react-icons/fa6';
-import {
-  PiSelectionAll,
-  PiSelectionAllFill,
-  PiSelectionAllLight,
-} from 'react-icons/pi';
+import { PiSelectionAllFill, PiSelectionAllLight } from 'react-icons/pi';
 
 import { useCustomerStore } from '@/store';
 import { useParams, useRouter } from 'next/navigation';
@@ -26,6 +22,7 @@ import 'react-photo-album/rows.css';
 import 'yet-another-react-lightbox/styles.css';
 import { useSession } from 'next-auth/react';
 import FileView from '@/components/PDFViewer';
+import FormWarning from '@/components/form-warning';
 
 const FolderPage = () => {
   const [file, setFile] = useState();
@@ -35,6 +32,9 @@ const FolderPage = () => {
   const { filePath, setFilePath, folders } = useCustomerStore();
   const [selectedFiles, setSelectedFiles] = useState<any[]>([]);
   const [index, setIndex] = React.useState(-1);
+
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const params = useParams();
 
@@ -62,6 +62,7 @@ const FolderPage = () => {
     onSuccess: () => {
       setFile(undefined);
       setSelectedFiles([]);
+      setOpenFileUpload(false);
     },
   });
 
@@ -212,6 +213,30 @@ const FolderPage = () => {
     });
   };
 
+  useEffect(() => {
+    if (mutation.isError) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+    }
+    if (mutation.isSuccess) {
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    }
+    if (mutationDelete.isError) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+    }
+    if (mutationDelete.isSuccess) {
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    }
+  }, [
+    mutation.isError,
+    mutation.isSuccess,
+    mutationDelete.isError,
+    mutationDelete.isSuccess,
+  ]);
+
   const { data: session, status } = useSession();
   const router = useRouter();
 
@@ -305,6 +330,12 @@ const FolderPage = () => {
           )}
           {mutationDelete.isSuccess && (
             <FormSuccess message={mutationDelete.data.message as any} />
+          )}
+          {mutationDelete.isPending && (
+            <FormWarning message="Dosyalar siliniyor. Lütfen Bekleyiniz." />
+          )}
+          {mutation.isPending && (
+            <FormWarning message="Dosyalar yükleniyor. Lütfen Bekleyiniz." />
           )}
         </div>
         <form className="mt-2">

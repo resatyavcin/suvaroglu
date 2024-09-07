@@ -31,6 +31,7 @@ export const columns: TCustomerColumn = (
               onCheckedChange={(value) => {
                 row.toggleSelected(!!value);
                 if (value) {
+                  console.log(row.original.id);
                   selectCustomers(row.original.id);
                   return;
                 }

@@ -1,12 +1,28 @@
 'use client';
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
+import { useEffect, useState } from 'react';
 
 interface FormErrorProps {
   message?: string;
 }
 
 const FormError = ({ message }: FormErrorProps) => {
-  if (!message) return null;
+  const [visible, setVisible] = useState(!!message);
+
+  useEffect(() => {
+    if (message) {
+      setVisible(true);
+      const timer = setTimeout(() => {
+        setVisible(false);
+      }, 3000);
+
+      // Cleanup timer when component unmounts or message changes
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
+  if (!message || !visible) return null;
+
   return (
     <div
       className="bg-destructive/15 p-3 rounded-md

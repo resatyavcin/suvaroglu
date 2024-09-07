@@ -16,7 +16,7 @@ const CustomerActions = () => {
   } = useCustomerStore();
 
   return (
-    <div className={'mr-3'}>
+    <div className="mt-4">
       <CustomerAlertDialog
         title={'Emin misin?'}
         description={
@@ -35,7 +35,7 @@ const CustomerActions = () => {
       />
 
       {isViewActionButtons && (
-        <div className={'gap-x-1.5 flex items-center justify-end w-full'}>
+        <div className={'flex gap-x-1.5'}>
           <Button
             variant={'destructive'}
             onClick={() => {

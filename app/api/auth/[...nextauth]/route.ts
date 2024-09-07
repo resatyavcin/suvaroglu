@@ -18,6 +18,7 @@ const authOptions = {
       return process.env.NEXT_PUBLIC_CLIENT_URL || '';
     },
   },
+  pages: {},
 };
 
 const handler = NextAuth(authOptions);
