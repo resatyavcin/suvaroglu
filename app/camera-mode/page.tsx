@@ -6,12 +6,8 @@ import Camera, { IMAGE_TYPES } from 'react-html5-camera-photo';
 import { Suspense, useEffect, useState } from 'react';
 import { IoCloseSharp } from 'react-icons/io5';
 import 'react-html5-camera-photo/build/css/index.css';
-import {
-  useRouter,
-  useSearchParams,
-  useParams,
-  usePathname,
-} from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import { useMutation } from '@tanstack/react-query';
 import { useCustomerStore } from '@/store';
 import { useSession } from 'next-auth/react';
@@ -73,8 +69,8 @@ function UploadButton({ file }: any) {
 const CameraMode = () => {
   const [dataUri, setDataUri] = useState<any>();
   const [file, setFile] = useState<File | undefined>(undefined);
-  const { filePath } = useCustomerStore();
-  const { push } = useRouter();
+  const router = useRouter();
+  const param = useSearchParams();
 
   const handleTakePhoto = (data: any) => {
     setDataUri(data);
@@ -90,13 +86,16 @@ const CameraMode = () => {
   };
 
   const { data: session, status } = useSession();
-  const router = useRouter();
 
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/');
     }
   }, [status]);
+
+  useEffect(() => {
+    console.log(window.document.referrer);
+  }, []);
 
   if (session) {
     return (

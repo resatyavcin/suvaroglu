@@ -8,6 +8,12 @@ import { useMutation } from '@tanstack/react-query';
 import FormError from '@/components/form-error';
 import FormSuccess from '@/components/form-success';
 import { FaDownload, FaFile, FaFileArrowUp, FaShare } from 'react-icons/fa6';
+import {
+  PiSelectionAll,
+  PiSelectionAllFill,
+  PiSelectionAllLight,
+} from 'react-icons/pi';
+
 import { useCustomerStore } from '@/store';
 import { useParams, useRouter } from 'next/navigation';
 import { IoCameraSharp } from 'react-icons/io5';
@@ -236,46 +242,51 @@ const FolderPage = () => {
         {session &&
         session.user &&
         session?.user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL ? (
-          <div className={'flex justify-between items-center'}>
-            <div className={'my-4'}>
-              {selectedFiles.length > 0 && (
-                <Button
-                  className="mr-4"
-                  onClick={() => handleShareButton(selectedFiles)}
-                >
-                  <FaShare />
-                </Button>
+          <div className={'flex items-center gap-x-2 my-4'}>
+            <Button
+              onClick={() =>
+                selectedFiles.length > 0
+                  ? setSelectedFiles([])
+                  : setSelectedFiles([...medias.map((item: any) => item.url)])
+              }
+            >
+              {selectedFiles.length > 0 ? (
+                <PiSelectionAllLight />
+              ) : (
+                <PiSelectionAllFill />
               )}
+            </Button>
 
-              {selectedFiles.length > 0 && (
-                <Button
-                  className="mr-4"
-                  onClick={() => handleDownloadButton(selectedFiles)}
-                >
-                  <FaDownload />
-                </Button>
-              )}
-
-              <Button
-                className="mr-4"
-                onClick={() => handleDeleteS3(selectedFiles)}
-              >
-                <MdDelete />
+            {selectedFiles.length > 0 && (
+              <Button onClick={() => handleShareButton(selectedFiles)}>
+                <FaShare />
               </Button>
+            )}
 
-              <Button
-                className="mr-4"
-                onClick={() => setOpenFileUpload(!openFileUpload)}
-              >
-                <FaFileArrowUp />
+            {selectedFiles.length > 0 && (
+              <Button onClick={() => handleDownloadButton(selectedFiles)}>
+                <FaDownload />
               </Button>
+            )}
 
-              <Link href={`/camera-mode?folderId=${params?.folderId}`}>
-                <Button>
-                  <IoCameraSharp />
-                </Button>
-              </Link>
-            </div>
+            <Button onClick={() => handleDeleteS3(selectedFiles)}>
+              <MdDelete />
+            </Button>
+
+            <Button onClick={() => setOpenFileUpload(!openFileUpload)}>
+              <FaFileArrowUp />
+            </Button>
+
+            <Link
+              href={{
+                pathname: '/camera-mode',
+                query: { isRedirect: 0, folderId: params?.folderId },
+              }}
+            >
+              <Button>
+                <IoCameraSharp />
+              </Button>
+            </Link>
           </div>
         ) : (
           <></>

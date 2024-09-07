@@ -158,7 +158,12 @@ const CustomerFile = () => {
           ) : session &&
             session.user &&
             session?.user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL ? (
-            <Link href={`/camera-mode?fileId=${params?.fileId}`}>
+            <Link
+              href={{
+                pathname: '/camera-mode',
+                query: { isRedirect: 0, fileId: params?.fileId },
+              }}
+            >
               <Button
                 className="mr-4 bg-red-800"
                 onClick={() => setFileName('verifyKM.jpeg')}
