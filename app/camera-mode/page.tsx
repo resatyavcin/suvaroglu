@@ -70,7 +70,6 @@ const CameraMode = () => {
   const [dataUri, setDataUri] = useState<any>();
   const [file, setFile] = useState<File | undefined>(undefined);
   const router = useRouter();
-  const param = useSearchParams();
 
   const handleTakePhoto = (data: any) => {
     setDataUri(data);
