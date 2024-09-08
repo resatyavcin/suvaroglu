@@ -8,6 +8,10 @@ import * as z from 'zod';
 import { CustomerVehicleServiceAddFormSchema } from '@/schemas';
 import { createCustomer } from '@/actions/createCustomer';
 
+function generateRandomCode() {
+  return Math.floor(100000 + Math.random() * 900000);
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -30,6 +34,8 @@ export async function POST(req: NextRequest) {
   if (!validatedFields.success) {
     return Response.json({ error: 'Tip Hatası.' });
   }
+
+  const verifyCode = generateRandomCode();
 
   try {
     const {
@@ -58,12 +64,17 @@ export async function POST(req: NextRequest) {
       customerVehicle,
       customerVehicleKM,
       customerVehicleNumber,
+      code: verifyCode,
       customerFilePath: data.filePath,
     } as any);
 
     return NextResponse.json({
       status: 200,
-      data: data.customerId,
+      data: {
+        customerId: data.customerId,
+        customerPhone,
+        customerVerify: verifyCode,
+      },
       message: 'Araç servise başarı ile kaydedilmiştir.',
     });
   } catch (err: any) {

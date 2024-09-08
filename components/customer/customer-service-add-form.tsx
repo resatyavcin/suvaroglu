@@ -44,6 +44,15 @@ const CustomerServiceAddForm = () => {
     },
   });
 
+  const generateWhatsappMessage = ({
+    customerPhone,
+    customerVerify,
+    link,
+  }: any) => {
+    const message = `Merhaba, *onay kodunuzu* aşağıda bulabilirsiniz:\n${customerVerify}\n\n Dosya takibi için ise aşağıdaki linke tıklayınız.\n ${link}`;
+    return `https://wa.me/${customerPhone}?text=${message}`;
+  };
+
   const form = useForm<z.infer<typeof CustomerVehicleServiceAddFormSchema>>({
     resolver: zodResolver(CustomerVehicleServiceAddFormSchema),
     defaultValues: {
@@ -197,7 +206,7 @@ const CustomerServiceAddForm = () => {
 
             {mutation.isSuccess && (
               <Link
-                href={`/customer/customer-detail/${(mutation.data as any).data}`}
+                href={`/customer/customer-detail/${(mutation.data as any).data?.customerId}`}
               >
                 <Button
                   type="submit"
@@ -206,6 +215,25 @@ const CustomerServiceAddForm = () => {
                   disabled={mutation.isPending}
                 >
                   Müşterinin dosyasına git
+                </Button>
+              </Link>
+            )}
+
+            {mutation.isSuccess && (
+              <Link
+                href={generateWhatsappMessage({
+                  customerPhone: (mutation.data as any).data?.customerPhone,
+                  customerVerify: (mutation.data as any).data?.customerVerify,
+                  link: `${process.env.NEXT_PUBLIC_CLIENT_URL}/customer/customer-detail/${(mutation.data as any).data?.customerId}`,
+                })}
+              >
+                <Button
+                  type="submit"
+                  variant="secondary"
+                  className="w-full mt-4"
+                  disabled={mutation.isPending}
+                >
+                  Müşteriye dosya linkini gönder
                 </Button>
               </Link>
             )}
