@@ -13,18 +13,20 @@ function removeSpaces(str: string) {
 export const createCustomer = async ({
   customerId,
   customerName,
+  code,
   customerSurname,
   customerPhone,
   customerVehicle,
   customerVehicleKM,
   customerVehicleNumber,
   customerFilePath,
-}: TCustomer & { customerFilePath: string }) => {
+}: TCustomer & { customerFilePath: string; code: string }) => {
   try {
     const command = new PutCommand({
       TableName: process.env.NEXT_PUBLIC_AWS_TABLE,
       Item: {
         customerId,
+        code,
         customerName,
         customerSurname,
         customerPhone,

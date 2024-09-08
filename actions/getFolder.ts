@@ -1,38 +1,40 @@
 'use server';
 
-import { ListObjectsCommand } from '@aws-sdk/client-s3';
-import { s3 } from '@/constants/s3';
+import { GetItemCommand } from '@aws-sdk/client-dynamodb';
+import { docClient } from '@/constants/dynamo';
+import { TCustomer } from '@/constants';
 
-export const getFolder = async (fileId: string) => {
-  const listFolder = new ListObjectsCommand({
-    Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+export const getFolder = async (fileId: string, otp?: string) => {
+  if (!otp) {
+    throw new Error('OTP Hatası');
+  }
+
+  const command = new GetItemCommand({
+    TableName: process.env.NEXT_PUBLIC_AWS_TABLE,
+    Key: {
+      customerId: { S: fileId },
+    },
   });
 
-  const listFolderPromise = await s3().send(listFolder);
+  const response = await docClient.send(command);
 
-  return (listFolderPromise.Contents || [])
-    .filter(
-      (content: any) => content.Key?.slice(0, -1)?.split('/')[0] === fileId
-    )
-    .map((content: any) => {
-      const id = content.Key?.slice(0, -1)?.split('/')[0];
-      const info = content.Key?.slice(0, -1)?.split('/')[1]?.split('-');
+  const item = response.Item as unknown as Record<
+    keyof (TCustomer & { customerFilePath: string; code: number }),
+    { S: string; N: string }
+  >;
 
-      return {
-        id,
-        filePath:
-          content.Key?.split('/')[0] +
-          '/' +
-          content.Key?.split('/')[1] +
-          '/' +
-          content.Key?.split('/')[2] +
-          '/',
-        customer: {
-          customerName: info[0],
-          customerSurname: info[1],
-          customerVehicle: info[2],
-          customerVehicleKM: info[3],
-        },
-      };
-    })[0];
+  if (otp && item.code.N !== otp) {
+    throw new Error('OTP Hatası');
+  }
+  return {
+    id: item.customerId.S,
+    filePath: item.customerFilePath.S,
+    customer: {
+      code: item.code.N,
+      customerName: item.customerName.S,
+      customerSurname: item.customerSurname.S,
+      customerVehicle: item.customerVehicle.S,
+      customerVehicleKM: item.customerVehicleKM.S,
+    },
+  };
 };

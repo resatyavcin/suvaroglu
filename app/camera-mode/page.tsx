@@ -92,10 +92,6 @@ const CameraMode = () => {
     }
   }, [status]);
 
-  useEffect(() => {
-    console.log(window.document.referrer);
-  }, []);
-
   if (session) {
     return (
       <Suspense fallback={null}>

@@ -13,22 +13,50 @@ import { BsSpeedometer } from 'react-icons/bs';
 import CustomerFolders from '@/components/customer/customer-folders';
 import { MdDelete } from 'react-icons/md';
 import { useSession } from 'next-auth/react';
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from '@/components/ui/input-otp';
 
 const CustomerFile = () => {
   const params = useParams();
   const { setFilePath, setFileName } = useCustomerStore();
   const [verifyContentMedia, setVerifyContentMedia] = useState<any>(undefined);
+  const [otp, setOtp] = useState('');
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  const { data: customerInfoData, isSuccess } = useQuery({
+  const {
+    data: customerInfoData,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ['customerInfo', params?.fileId],
     queryFn: async () => {
+      const localOTP = localStorage.getItem('otp');
       const data = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/folder/${params?.fileId}`
+        `${process.env.NEXT_PUBLIC_API_URL}/folder/${params?.fileId}?otp=${localOTP === null ? otp : localOTP}&status=${status}`
       );
+
+      if (!data.ok) {
+        throw new Error('Error');
+      }
+
       return data.json();
     },
-    enabled: !!params?.fileId,
+    enabled:
+      (!!params?.fileId &&
+        (status === 'loading' || status === 'unauthenticated')) ||
+      (!!params?.fileId && status === 'authenticated'),
+    retry: false,
   });
+
+  useEffect(() => {
+    if (status === 'unauthenticated' && otp.length === 6) {
+      refetch();
+    }
+  }, [otp]);
 
   const mediaMutation = useMutation({
     mutationFn: async (values: any) => {
@@ -72,6 +100,7 @@ const CustomerFile = () => {
 
   useEffect(() => {
     if (customerInfoData) {
+      localStorage.setItem('otp', customerInfoData.data.customer.code);
       mediaMutation.mutate({ filePath: customerInfoData.data.filePath });
       setFilePath(customerInfoData.data.filePath);
       localStorage.setItem('defaultpath', customerInfoData.data.filePath);
@@ -90,9 +119,6 @@ const CustomerFile = () => {
     }
   }, [mediaMutation.isSuccess]);
 
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
   useEffect(() => {
     if (
       status === 'unauthenticated' &&
@@ -106,80 +132,107 @@ const CustomerFile = () => {
     return <div>Yükleniyor...</div>;
   }
 
-  return (
-    <div className="mt-5">
-      <div className="flex justify-between items-center">
-        <div className="space-y-1.5">
-          <h4 className="text-sm font-medium leading-none">
-            {customerInfoData?.data?.customer?.customerName +
-              ' ' +
-              customerInfoData?.data?.customer?.customerSurname}
-          </h4>
-          <p className="text-sm text-muted-foreground">
-            {customerInfoData?.data?.customer?.customerVehicle +
-              ' • ' +
-              Intl.NumberFormat('tr-TR', {
-                maximumSignificantDigits: 3,
-              }).format(
-                customerInfoData?.data?.customer?.customerVehicleKM || 0
-              ) +
-              ' KM'}
-          </p>
-        </div>
-
-        {verifyContentMedia &&
-          session &&
-          session.user &&
-          session?.user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL && (
-            <Button
-              variant="destructive"
-              className="mr-4"
-              onClick={async () => {
-                mutationDelete.mutate({
-                  filePath: customerInfoData.data.filePath,
-                  file: ['verifyKM.jpeg'],
-                });
-              }}
-            >
-              <MdDelete />
-            </Button>
-          )}
-
-        <div>
-          {verifyContentMedia ? (
-            <PhotoProvider>
-              <PhotoView src={verifyContentMedia?.url || ''}>
-                <Button className="mr-4 bg-green-600">
-                  <BsSpeedometer />
-                </Button>
-              </PhotoView>
-            </PhotoProvider>
-          ) : session &&
-            session.user &&
-            session?.user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL ? (
-            <Link
-              href={{
-                pathname: '/camera-mode',
-                query: { isRedirect: 0, fileId: params?.fileId },
-              }}
-            >
-              <Button
-                className="mr-4 bg-red-800"
-                onClick={() => setFileName('verifyKM.jpeg')}
-              >
-                <BsSpeedometer />
-              </Button>
-            </Link>
-          ) : (
-            <></>
-          )}
+  if (status === 'unauthenticated' && !customerInfoData && !isLoading) {
+    return (
+      <div className="w-full flex items-center mt-12">
+        <div className="space-y-2 mx-auto">
+          <InputOTP
+            className="mx-auto"
+            maxLength={6}
+            value={otp}
+            onChange={(value) => setOtp(value as any)}
+          >
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
         </div>
       </div>
-      <Separator className="my-4" />
+    );
+  }
 
-      <CustomerFolders />
-    </div>
-  );
+  if (status === 'authenticated' || customerInfoData) {
+    return (
+      <div className="mt-5">
+        <div className="flex justify-between items-center">
+          <div className="space-y-1.5">
+            <h4 className="text-sm font-medium leading-none">
+              {customerInfoData?.data?.customer?.customerName +
+                ' ' +
+                customerInfoData?.data?.customer?.customerSurname}
+            </h4>
+            <p className="text-sm text-muted-foreground">
+              {customerInfoData?.data?.customer?.customerVehicle +
+                ' • ' +
+                Intl.NumberFormat('tr-TR', {
+                  maximumSignificantDigits: 3,
+                }).format(
+                  customerInfoData?.data?.customer?.customerVehicleKM || 0
+                ) +
+                ' KM'}
+            </p>
+          </div>
+
+          {verifyContentMedia &&
+            session &&
+            session.user &&
+            session?.user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL && (
+              <Button
+                variant="destructive"
+                className="mr-4"
+                onClick={async () => {
+                  mutationDelete.mutate({
+                    filePath: customerInfoData.data.filePath,
+                    file: ['verifyKM.jpeg'],
+                  });
+                }}
+              >
+                <MdDelete />
+              </Button>
+            )}
+
+          <div>
+            {verifyContentMedia ? (
+              <PhotoProvider>
+                <PhotoView src={verifyContentMedia?.url || ''}>
+                  <Button className="mr-4 bg-green-600">
+                    <BsSpeedometer />
+                  </Button>
+                </PhotoView>
+              </PhotoProvider>
+            ) : session &&
+              session.user &&
+              session?.user.email ===
+                process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL ? (
+              <Link
+                href={{
+                  pathname: '/camera-mode',
+                  query: { isRedirect: 0, fileId: params?.fileId },
+                }}
+              >
+                <Button
+                  className="mr-4 bg-red-800"
+                  onClick={() => setFileName('verifyKM.jpeg')}
+                >
+                  <BsSpeedometer />
+                </Button>
+              </Link>
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+        <Separator className="my-4" />
+
+        <CustomerFolders />
+      </div>
+    );
+  }
 };
 
 export default CustomerFile;

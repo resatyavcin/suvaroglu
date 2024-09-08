@@ -29,12 +29,9 @@ const FolderPage = () => {
   const [openFileUpload, setOpenFileUpload] = useState(false);
   const [medias, setMedias] = useState([]);
 
-  const { filePath, setFilePath, folders } = useCustomerStore();
+  const { setFilePath, folders } = useCustomerStore();
   const [selectedFiles, setSelectedFiles] = useState<any[]>([]);
   const [index, setIndex] = React.useState(-1);
-
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
 
   const params = useParams();
 
@@ -212,30 +209,6 @@ const FolderPage = () => {
         (localStorage.getItem('defaultpath') || '') + `${params?.folderId}/`,
     });
   };
-
-  useEffect(() => {
-    if (mutation.isError) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000);
-    }
-    if (mutation.isSuccess) {
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-    }
-    if (mutationDelete.isError) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000);
-    }
-    if (mutationDelete.isSuccess) {
-      setShowSuccess(true);
-      setTimeout(() => setShowSuccess(false), 3000);
-    }
-  }, [
-    mutation.isError,
-    mutation.isSuccess,
-    mutationDelete.isError,
-    mutationDelete.isSuccess,
-  ]);
 
   const { data: session, status } = useSession();
   const router = useRouter();
