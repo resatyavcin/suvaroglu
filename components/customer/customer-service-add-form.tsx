@@ -222,7 +222,7 @@ const CustomerServiceAddForm = () => {
             {mutation.isSuccess && (
               <Link
                 href={generateWhatsappMessage({
-                  customerPhone: (mutation.data as any).data?.customerPhone,
+                  customerPhone: `+9${(mutation.data as any).data?.customerPhone}`,
                   customerVerify: (mutation.data as any).data?.customerVerify,
                   link: `${process.env.NEXT_PUBLIC_CLIENT_URL}/customer/customer-detail/${(mutation.data as any).data?.customerId}`,
                 })}
