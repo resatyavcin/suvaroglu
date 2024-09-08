@@ -68,7 +68,6 @@ const FolderPage = () => {
 
   const mutationDelete = useMutation({
     mutationFn: async (values: any) => {
-      console.log('values', values);
       const form_data = new FormData();
 
       for (let key in values) {
@@ -95,7 +94,9 @@ const FolderPage = () => {
 
   const urlToObject = async (url: string) => {
     try {
-      const response = await fetch(url, { cache: 'no-cache' });
+      const response = await fetch(url, {
+        cache: 'no-cache',
+      });
       const blob = await response.blob();
 
       return new File([blob], 'image.png', { type: blob.type });
@@ -107,7 +108,6 @@ const FolderPage = () => {
 
   const download = async (urls: string[]) => {
     for (const url of urls) {
-      console.log(url);
       try {
         const response = await fetch(url, { cache: 'no-cache' });
         const blob = await response.blob();

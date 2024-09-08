@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     const {
       customerName,
       customerSurname,
+      customerPhone,
       customerVehicle,
       customerVehicleKM,
       customerVehicleNumber,
@@ -43,6 +44,7 @@ export async function POST(req: NextRequest) {
     const data: any = await createFolder({
       customerName,
       customerSurname,
+      customerPhone,
       customerVehicle,
       customerVehicleKM,
       customerVehicleNumber,
@@ -52,6 +54,7 @@ export async function POST(req: NextRequest) {
       customerId: data.customerId,
       customerName,
       customerSurname,
+      customerPhone,
       customerVehicle,
       customerVehicleKM,
       customerVehicleNumber,

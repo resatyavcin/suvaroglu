@@ -72,7 +72,6 @@ const CustomerFile = () => {
 
   useEffect(() => {
     if (customerInfoData) {
-      console.log(customerInfoData);
       mediaMutation.mutate({ filePath: customerInfoData.data.filePath });
       setFilePath(customerInfoData.data.filePath);
       localStorage.setItem('defaultpath', customerInfoData.data.filePath);

@@ -47,7 +47,6 @@ export const getMedias = async (filePath: string) => {
       });
 
       const url = await getSignedUrl(s3(), object, { expiresIn: 24 * 60 * 60 }); // 1 gün
-
       urls.push({
         url,
         name: mediaString,

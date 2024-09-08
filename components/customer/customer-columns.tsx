@@ -7,6 +7,8 @@ import { MdContactPage } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import Link from 'next/link';
+import { IoPhonePortraitOutline } from 'react-icons/io5';
+import { FaPhone } from 'react-icons/fa6';
 
 type TCustomerColumn = (
   selectCustomers: (customer: string) => void,
@@ -31,7 +33,6 @@ export const columns: TCustomerColumn = (
               onCheckedChange={(value) => {
                 row.toggleSelected(!!value);
                 if (value) {
-                  console.log(row.original.id);
                   selectCustomers(row.original.id);
                   return;
                 }
@@ -45,12 +46,19 @@ export const columns: TCustomerColumn = (
               <h2 className="font-bold">{row.original.header}</h2>
               <p>{row.original.description} KM</p>
             </div>
+            <div>
+              <a href={`tel:${row.original.phone}`}>
+                <Button variant={'ghost'}>
+                  <FaPhone className="w-4 h-4" />
+                </Button>
+              </a>
 
-            <Link href={`/customer/customer-detail/${row.original.id}`}>
-              <Button variant={'ghost'}>
-                <MdContactPage className="w-5 h-5" />
-              </Button>
-            </Link>
+              <Link href={`/customer/customer-detail/${row.original.id}`}>
+                <Button variant={'ghost'}>
+                  <MdContactPage className="w-5 h-5" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       );

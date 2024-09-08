@@ -69,6 +69,7 @@ export const listFolders = async ({
       customerVehicleKM: item.customerVehicleKM.S,
       customerFilePath: item.customerFilePath.S,
       customerId: item.customerId.S,
+      customerPhone: item.customerPhone.S,
       customerDate: item.customerDate.S as string,
     }));
 
@@ -82,6 +83,7 @@ export const listFolders = async ({
       return {
         nextMarker: (dynamoReturnData?.LastEvaluatedKey as any)?.customerId?.S,
         id: content.customerId,
+        phone: content.customerPhone,
         header: content.customerName + ' ' + content.customerSurname,
         description:
           content.customerVehicle + ' • ' + content.customerVehicleKM,

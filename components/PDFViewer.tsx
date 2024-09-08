@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { DialogHeader } from './ui/dialog';
+import { Button } from './ui/button';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
@@ -38,20 +39,47 @@ const FileView = ({
   return (
     <div>
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger className="w-full">
           <Document
             file={pdfURL}
             onLoadSuccess={onDocumentLoadSuccess}
-            className={'flex flex-col items-center'}
+            className={'mx-auto'}
           >
-            <Page width={200} height={660} pageNumber={pageNumber} />
+            <Page width={200} height={660} pageNumber={1} />
           </Document>
         </DialogTrigger>
         <DialogContent className="w-screen h-screen">
           <DialogHeader>
             <DialogDescription>
               <Document file={pdfURL} onLoadSuccess={onDocumentLoadSuccess}>
-                <Page height={667} width={300} pageNumber={pageNumber} />
+                <Page className={'mt-11'} width={300} pageNumber={pageNumber} />
+                <p>
+                  {pageNumber} / {numPages}
+                </p>
+                <div className="mt-7">
+                  {pageNumber !== 1 && (
+                    <Button
+                      onClick={() => {
+                        setPageNumber((prev) => {
+                          return prev - 1;
+                        });
+                      }}
+                    >
+                      Önceki Sayfa
+                    </Button>
+                  )}
+                  {pageNumber != numPages && (
+                    <Button
+                      onClick={() => {
+                        setPageNumber((prev) => {
+                          return prev + 1;
+                        });
+                      }}
+                    >
+                      Sonraki Sayfa
+                    </Button>
+                  )}
+                </div>
               </Document>
             </DialogDescription>
           </DialogHeader>

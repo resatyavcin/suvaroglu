@@ -44,7 +44,6 @@ export async function DELETE(req: NextRequest) {
       const fileName = ((fileList[i] as any).split('/').pop() as string).split(
         '?'
       )[0];
-      console.log(fileName);
       await deleteFile(filePath, fileName);
     }
 
@@ -76,13 +75,15 @@ export async function POST(req: NextRequest) {
 
     if (file) {
       const buffer = Buffer.from(await file.arrayBuffer());
-      await uploadFile(
-        buffer,
-        fileNameSave
+
+      await uploadFile({
+        file: buffer,
+        fileName: fileNameSave
           ? fileNameSave
           : turkishToEnglish(file.name).toLowerCase().replace(/ /g, '-'),
-        filePath
-      );
+        filePath,
+        contentType: file.type,
+      });
 
       return NextResponse.json({
         status: 200,
@@ -92,13 +93,14 @@ export async function POST(req: NextRequest) {
 
     for (let i = 0; i < fileList.length; i++) {
       const buffer = Buffer.from(await fileList[i].arrayBuffer());
-      await uploadFile(
-        buffer,
-        fileNameSave
+      await uploadFile({
+        file: buffer,
+        fileName: fileNameSave
           ? fileNameSave
           : turkishToEnglish(fileList[i].name).toLowerCase().replace(/ /g, '-'),
-        filePath
-      );
+        filePath,
+        contentType: fileList[i].type,
+      });
     }
 
     return NextResponse.json({

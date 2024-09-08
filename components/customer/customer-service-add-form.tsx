@@ -49,6 +49,7 @@ const CustomerServiceAddForm = () => {
     defaultValues: {
       customerName: '',
       customerSurname: '',
+      customerPhone: '',
       customerVehicle: '',
       customerVehicleKM: '',
       customerVehicleNumber: '',
@@ -100,6 +101,24 @@ const CustomerServiceAddForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Müşteri Soyismi</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={mutation.isPending}
+                      type="text"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="customerPhone"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Müşteri Telefonu</FormLabel>
                   <FormControl>
                     <Input
                       {...field}

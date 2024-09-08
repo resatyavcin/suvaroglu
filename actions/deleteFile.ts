@@ -5,7 +5,6 @@ import { s3 } from '@/constants/s3';
 
 export const deleteFile = async (filePath: string, fileName: string) => {
   try {
-    console.log(`Delete file "${filePath}" from ${fileName}`);
     const deleteFromS3 = new DeleteObjectCommand({
       Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
       Key: filePath + fileName,
