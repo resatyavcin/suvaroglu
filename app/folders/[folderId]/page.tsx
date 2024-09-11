@@ -267,10 +267,11 @@ const FolderPage = () => {
               </Button>
             )}
 
-            <Button onClick={() => handleDeleteS3(selectedFiles)}>
-              <MdDelete />
-            </Button>
-
+            {selectedFiles.length > 0 && (
+              <Button onClick={() => handleDeleteS3(selectedFiles)}>
+                <MdDelete />
+              </Button>
+            )}
             <Button onClick={() => setOpenFileUpload(!openFileUpload)}>
               <FaFileArrowUp />
             </Button>

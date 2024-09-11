@@ -3,23 +3,6 @@
 import { GetObjectCommand, ListObjectsCommand } from '@aws-sdk/client-s3';
 import { s3 } from '@/constants/s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-const blobToBase64 = (blob: any) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      // Base64 formatındaki veri URL olarak döner
-      resolve(reader.result);
-    };
-
-    reader.onerror = (error) => {
-      console.error('Base64 dönüşüm hatası:', error);
-      reject(error);
-    };
-
-    // Blob verisini base64 formatına dönüştür
-    reader.readAsDataURL(blob);
-  });
 
 export const getMedias = async (filePath: string) => {
   try {

@@ -71,6 +71,8 @@ const CustomerServiceAddForm = () => {
     mutation.mutate(values);
   };
 
+  console.log(mutation.data);
+
   return (
     <div className="mt-6">
       <Form {...form}>

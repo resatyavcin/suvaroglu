@@ -16,11 +16,10 @@ export async function GET(req: NextRequest) {
     let data;
 
     if (status === 'authenticated') {
-      data = await getFolder(fileId);
+      data = await getFolder(fileId, undefined, status);
       return NextResponse.json({ status: 200, data: data });
     }
-
-    data = await getFolder(fileId, otp || '');
+    data = await getFolder(fileId, otp || '', status ? status : undefined);
 
     return NextResponse.json({ status: 200, data: data });
   } catch (err) {

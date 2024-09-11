@@ -84,28 +84,16 @@ const useCustomerStore = create<ICustomerState>((set) => ({
     set((state: ICustomerState) => {
       state.isViewActionButtons = true;
 
-      if (state.selectedCustomersCount > 0) {
-        state.deleteButtonText = 'Müşterileri Sil';
-      }
-      const newCustomerList = state.customerList?.filter(
-        (customer: TCustomer) => customer.customerId == customerId
-      );
+      const newCustomerList = [...(state.selectedCustomers || []), customerId];
 
       return {
         selectedCustomersCount: state.selectedCustomersCount + 1,
-        selectedCustomers: [
-          ...(state.selectedCustomers || []),
-          ...newCustomerList?.map((customer: TCustomer) => customer.customerId),
-        ],
+        selectedCustomers: newCustomerList,
       };
     }),
 
   unselectCustomers: (customerIdLocal: string) =>
     set((state: ICustomerState) => {
-      if (state.selectedCustomersCount == 2) {
-        state.deleteButtonText = 'Müşteriyi Sil';
-      }
-
       if (state.selectedCustomersCount == 1) {
         state.isViewActionButtons = false;
       }

@@ -5,8 +5,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createFolder } from '@/actions/createFolder';
 import { listFolders } from '@/actions/listFolders';
 import * as z from 'zod';
-import { CustomerVehicleServiceAddFormSchema } from '@/schemas';
+import {
+  CustomerVehicleServiceUpdateFormSchema,
+  CustomerVehicleServiceAddFormSchema,
+} from '@/schemas';
 import { createCustomer } from '@/actions/createCustomer';
+import { deleteFolder } from '@/actions/deleteFolder';
+import { updateCustomer } from '@/actions/updateCustomer';
 
 function generateRandomCode() {
   return Math.floor(100000 + Math.random() * 900000);
@@ -35,7 +40,7 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: 'Tip Hatası.' });
   }
 
-  const verifyCode = generateRandomCode();
+  const verifyCode = generateRandomCode().toString();
 
   try {
     const {
@@ -57,7 +62,7 @@ export async function POST(req: NextRequest) {
     } as any);
 
     await createCustomer({
-      customerId: data.customerId,
+      customerId: data.customerID,
       customerName,
       customerSurname,
       customerPhone,
@@ -71,7 +76,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       status: 200,
       data: {
-        customerId: data.customerId,
+        customerId: data.customerID,
         customerPhone,
         customerVerify: verifyCode,
       },
@@ -84,6 +89,77 @@ export async function POST(req: NextRequest) {
         message: 'Araç kaydetme başarısız. Lütfen tekrar deneyiniz.',
       },
       { status: 500 }
+    );
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  const body = await req.json();
+  const validatedFields =
+    CustomerVehicleServiceUpdateFormSchema.safeParse(body);
+
+  if (!validatedFields.success) {
+    return Response.json({ error: 'Tip Hatası.' });
+  }
+
+  try {
+    const {
+      customerId,
+      customerName,
+      customerSurname,
+      customerPhone,
+      customerVehicle,
+      customerVehicleKM,
+      customerVehicleNumber,
+      experName,
+      experPhone,
+      experMail,
+    } = body;
+
+    const result = await updateCustomer({
+      customerId,
+      customerName,
+      customerSurname,
+      customerPhone,
+      customerVehicle,
+      customerVehicleKM,
+      customerVehicleNumber,
+      experName,
+      experPhone,
+      experMail,
+    } as any);
+
+    return NextResponse.json({
+      status: 200,
+      result,
+      message: 'Araç servise başarı ile güncellenmiştir.',
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      {
+        error: JSON.stringify(err.message),
+        message: 'Araç güncelleme başarısız. Lütfen tekrar deneyiniz.',
+      },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const formData = await req.json();
+
+  try {
+    await deleteFolder(formData.customers);
+
+    return NextResponse.json({
+      status: 200,
+      message: 'Dosya Silme Başarıyla tamamalandı.',
+    });
+  } catch (err) {
+    console.error('Error deleting files:', err);
+    return NextResponse.json(
+      { error: err, message: 'Dosya Silme Başarısız.' },
+      { status: 400 }
     );
   }
 }

@@ -20,7 +20,7 @@ export const createFolder = async (customer: TCustomer) => {
 
     return {
       res: await s3().send(createFolderCommand),
-      customerId,
+      customerID: customerId,
       filePath: `${customerId}/${folderName(customer)}` + 'contents/',
     };
   } catch (error) {

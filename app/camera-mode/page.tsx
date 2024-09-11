@@ -5,12 +5,13 @@ import { Button } from '@/components/ui/button';
 import Camera, { IMAGE_TYPES } from 'react-html5-camera-photo';
 import { Suspense, useEffect, useState } from 'react';
 import { IoCloseSharp } from 'react-icons/io5';
-import 'react-html5-camera-photo/build/css/index.css';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { useMutation } from '@tanstack/react-query';
 import { useCustomerStore } from '@/store';
 import { useSession } from 'next-auth/react';
+
+import 'react-html5-camera-photo/build/css/index.css';
 
 function UploadButton({ file }: any) {
   const searchParams = useSearchParams();
@@ -85,9 +86,10 @@ const CameraMode = () => {
   };
 
   const { data: session, status } = useSession();
+  const { filePath } = useCustomerStore();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (status === 'unauthenticated' || !filePath) {
       router.push('/');
     }
   }, [status]);
@@ -102,7 +104,7 @@ const CameraMode = () => {
                 className="w-5 h-5 my-3"
                 onClick={() => setDataUri(undefined)}
               />
-            )}{' '}
+            )}
           </CardHeader>
           <CardContent className="h-full w-full">
             {dataUri ? (

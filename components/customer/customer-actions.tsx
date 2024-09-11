@@ -5,15 +5,26 @@ import { IoCloudDownload, IoShareSocial, IoTrash } from 'react-icons/io5';
 import { useCustomerStore } from '@/store';
 import { CustomerAlertDialog } from '@/components/customer/customer-alert';
 import * as React from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 const CustomerActions = () => {
   const {
     isViewActionButtons,
     setIsOpenAlertDialogComponent,
     isOpenAlertDialogComponent,
-    deleteCustomers,
     selectedCustomers,
   } = useCustomerStore();
+
+  const mutationDelete = useMutation({
+    mutationFn: async (values: any) => {
+      const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/folder`, {
+        method: 'DELETE',
+        body: JSON.stringify(values),
+      });
+
+      return data.json();
+    },
+  });
 
   return (
     <div className="mt-4">
@@ -25,8 +36,8 @@ const CustomerActions = () => {
         okText={'Kalıcı olarak sil'}
         cancelText={'Vazgeç'}
         onApprove={() => {
+          mutationDelete.mutate({ customers: [...(selectedCustomers || [])] });
           setIsOpenAlertDialogComponent();
-          deleteCustomers(selectedCustomers || []);
         }}
         onCancel={() => {
           setIsOpenAlertDialogComponent();
@@ -43,14 +54,6 @@ const CustomerActions = () => {
             }}
           >
             <IoTrash className="w-4 h-4" />
-          </Button>
-
-          <Button>
-            <IoCloudDownload className="w-4 h-4" />
-          </Button>
-
-          <Button>
-            <IoShareSocial className="w-4 h-4" />
           </Button>
         </div>
       )}

@@ -18,6 +18,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons';
 
 const CustomerFile = () => {
   const params = useParams();
@@ -35,8 +36,9 @@ const CustomerFile = () => {
     queryKey: ['customerInfo', params?.fileId],
     queryFn: async () => {
       const localOTP = localStorage.getItem('otp');
+      const a = localOTP === null || localOTP === 'undefined';
       const data = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/folder/${params?.fileId}?otp=${localOTP === null ? otp : localOTP}&status=${status}`
+        `${process.env.NEXT_PUBLIC_API_URL}/folder/${params?.fileId}?otp=${otp}&status=${status}`
       );
 
       if (!data.ok) {
@@ -46,8 +48,7 @@ const CustomerFile = () => {
       return data.json();
     },
     enabled:
-      (!!params?.fileId &&
-        (status === 'loading' || status === 'unauthenticated')) ||
+      (!!params?.fileId && status === 'unauthenticated') ||
       (!!params?.fileId && status === 'authenticated'),
     retry: false,
   });
@@ -100,7 +101,6 @@ const CustomerFile = () => {
 
   useEffect(() => {
     if (customerInfoData) {
-      localStorage.setItem('otp', customerInfoData.data.customer.code);
       mediaMutation.mutate({ filePath: customerInfoData.data.filePath });
       setFilePath(customerInfoData.data.filePath);
       localStorage.setItem('defaultpath', customerInfoData.data.filePath);
@@ -212,7 +212,7 @@ const CustomerFile = () => {
               <Link
                 href={{
                   pathname: '/camera-mode',
-                  query: { isRedirect: 0, fileId: params?.fileId },
+                  query: { fileId: params?.fileId },
                 }}
               >
                 <Button
@@ -228,7 +228,39 @@ const CustomerFile = () => {
           </div>
         </div>
         <Separator className="my-4" />
-
+        {customerInfoData &&
+          session &&
+          session.user &&
+          session?.user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL && (
+            <div className="flex flex-col mb-3 items-center justify-between">
+              {(customerInfoData &&
+                customerInfoData?.data?.customer?.experName) ||
+              customerInfoData?.data?.customer?.experMail ||
+              customerInfoData?.data?.customer?.experPhone ? (
+                <>
+                  <h2>Expertiz Bilgileri</h2>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    {customerInfoData?.data?.customer?.experName +
+                      ' • ' +
+                      customerInfoData?.data?.customer?.experMail +
+                      ' • ' +
+                      customerInfoData?.data?.customer?.experPhone}
+                  </p>
+                </>
+              ) : (
+                <>
+                  {' '}
+                  <div
+                    className="bg-yellow-200 p-3 rounded-md
+                          flex items-center gap-x-2 text-sm text-yellow-700 w-full"
+                  >
+                    <ExclamationTriangleIcon className="h-4 w-4" />
+                    <p>{'Expertiz Bilgisi Bulunmamaktadır.'}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         <CustomerFolders />
       </div>
     );

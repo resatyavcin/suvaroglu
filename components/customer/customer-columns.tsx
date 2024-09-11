@@ -7,7 +7,7 @@ import { MdContactPage } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 import * as React from 'react';
 import Link from 'next/link';
-import { IoPhonePortraitOutline } from 'react-icons/io5';
+import { FaUserEdit } from 'react-icons/fa';
 import { FaPhone } from 'react-icons/fa6';
 
 type TCustomerColumn = (
@@ -56,6 +56,12 @@ export const columns: TCustomerColumn = (
               <Link href={`/customer/customer-detail/${row.original.id}`}>
                 <Button variant={'ghost'}>
                   <MdContactPage className="w-5 h-5" />
+                </Button>
+              </Link>
+
+              <Link href={`/customer/customer-update/${row.original.id}`}>
+                <Button variant={'ghost'}>
+                  <FaUserEdit className="w-5 h-5" />
                 </Button>
               </Link>
             </div>
