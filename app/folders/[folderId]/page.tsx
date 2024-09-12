@@ -67,10 +67,9 @@ const FolderPage = () => {
           });
 
           form_data.append('file[]', renamedFile);
-          return;
+        } else {
+          form_data.append('file[]', values.file[x]);
         }
-
-        form_data.append('file[]', values.file[x]);
       }
 
       const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/file`, {
