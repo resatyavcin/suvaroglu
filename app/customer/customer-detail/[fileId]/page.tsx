@@ -209,9 +209,10 @@ const CustomerFile = () => {
             {verifyContentMedia ? (
               <PhotoProvider>
                 <PhotoView src={verifyContentMedia?.url || ''}>
-                  <Button className="mr-4 bg-green-600">
+                  {/* <Button className="mr-4 bg-green-600">
                     <BsSpeedometer />
-                  </Button>
+                  </Button> */}
+                  <img src={verifyContentMedia?.url || ''} width={100} />
                 </PhotoView>
               </PhotoProvider>
             ) : session &&
