@@ -3,9 +3,9 @@
   "short_name": "Suvaroglu",
   "icons": [
     {
-      "src": "/favicon.jpeg",
-      "sizes": "256x127",
-      "type": "image/jpeg"
+      "src": "/icons.png",
+      "sizes": "192x192",
+      "type": "image/png"
     }
   ],
   "start_url": "/",
