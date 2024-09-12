@@ -1,7 +1,13 @@
 {
   "name": "Suvaroglu",
   "short_name": "Suvaroglu",
-  "icons": [],
+  "icons": [
+    {
+      "src": "/favicon.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    }
+  ],
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
