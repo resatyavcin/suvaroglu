@@ -9,7 +9,7 @@ import FormError from '@/components/form-error';
 import FormSuccess from '@/components/form-success';
 import { FaDownload, FaFile, FaFileArrowUp, FaShare } from 'react-icons/fa6';
 import { PiSelectionAllFill, PiSelectionAllLight } from 'react-icons/pi';
-
+import imageCompression from 'browser-image-compression';
 import { useCustomerStore } from '@/store';
 import { useParams, useRouter } from 'next/navigation';
 import { IoCameraSharp } from 'react-icons/io5';
@@ -39,6 +39,12 @@ const FolderPage = () => {
     mutationFn: async (values: any) => {
       const form_data = new FormData();
 
+      const options = {
+        maxSizeMB: 0.1,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      };
+
       for (let key in values) {
         if (key !== 'file') {
           form_data.append(key, values[key]);
@@ -46,6 +52,24 @@ const FolderPage = () => {
       }
 
       for (var x = 0; x < values.file.length; x++) {
+        const originalFileName = values.file[x].name;
+        const originalFileType = values.file[x].type;
+
+        if (originalFileType !== 'application/pdf') {
+          const compressedFile = await imageCompression(
+            values.file[x],
+            options
+          );
+
+          const renamedFile = new File([compressedFile], originalFileName, {
+            type: compressedFile.type,
+            lastModified: compressedFile.lastModified,
+          });
+
+          form_data.append('file[]', renamedFile);
+          return;
+        }
+
         form_data.append('file[]', values.file[x]);
       }
 
@@ -341,7 +365,7 @@ const FolderPage = () => {
                 ?.filter(
                   (item: any) =>
                     !item.name.includes('verifyKM') &&
-                    !(item.name as string).includes('.pdf')
+                    !(item.name as string).endsWith('.pdf')
                 )
                 .map((slices: any, index: number) => ({
                   src: slices.url,
@@ -379,7 +403,7 @@ const FolderPage = () => {
                 ?.filter(
                   (item: any) =>
                     !item.name.includes('verifyKM') &&
-                    !(item.name as string).includes('.pdf')
+                    !(item.name as string).endsWith('.pdf')
                 )
                 .map((slices: any, index: number) => ({ src: slices.url }))}
               open={index >= 0}
@@ -391,7 +415,7 @@ const FolderPage = () => {
               ?.filter(
                 (item: any) =>
                   !item.name.includes('verifyKM') &&
-                  (item.name as string).includes('.pdf')
+                  (item.name as string).endsWith('.pdf')
               )
               .map((item: any, i) => {
                 return (
