@@ -9,7 +9,7 @@ import FormError from '@/components/form-error';
 import FormSuccess from '@/components/form-success';
 import { FaDownload, FaFile, FaFileArrowUp, FaShare } from 'react-icons/fa6';
 import { PiSelectionAllFill, PiSelectionAllLight } from 'react-icons/pi';
-import imageCompression from 'browser-image-compression';
+// import imageCompression from 'browser-image-compression';
 import { useCustomerStore } from '@/store';
 import { useParams, useRouter } from 'next/navigation';
 import { IoCameraSharp } from 'react-icons/io5';
