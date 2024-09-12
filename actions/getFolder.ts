@@ -40,6 +40,7 @@ export const getFolder = async (
     id: item.customerId.S,
     filePath: item.customerFilePath.S,
     customer: {
+      code: item.code.S,
       customerName: item.customerName.S,
       customerSurname: item.customerSurname.S,
       customerPhone: item.customerPhone.S,

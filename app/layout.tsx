@@ -22,6 +22,7 @@ export default function RootLayout({
         <html lang="en">
           <head>
             <title>Suvaroglu</title>
+            <link rel="manifest" href="/manifest.json" />
           </head>
           <body className={cn(inter.className)}>
             <div className="bg-white min-h-[100vh]">{children}</div>

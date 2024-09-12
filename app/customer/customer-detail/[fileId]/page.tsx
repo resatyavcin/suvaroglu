@@ -132,6 +132,15 @@ const CustomerFile = () => {
     return <div>Yükleniyor...</div>;
   }
 
+  const generateWhatsappMessage = ({
+    customerPhone,
+    customerVerify,
+    link,
+  }: any) => {
+    const message = `Merhaba, *onay kodunuzu* aşağıda bulabilirsiniz:\n${customerVerify}\n\n Dosya takibi için ise aşağıdaki linke tıklayınız.\n ${link}`;
+    return `https://wa.me/${customerPhone}?text=${message}`;
+  };
+
   if (status === 'unauthenticated' && !customerInfoData && !isLoading) {
     return (
       <div className="w-full flex items-center mt-12">
@@ -228,6 +237,29 @@ const CustomerFile = () => {
           </div>
         </div>
         <Separator className="my-4" />
+
+        {session &&
+          session.user &&
+          session?.user.email === process.env.NEXT_PUBLIC_SUVAROGLU_EMAIL &&
+          customerInfoData && (
+            <Link
+              href={generateWhatsappMessage({
+                customerPhone: `+9${(customerInfoData as any)?.data?.customer?.customerPhone}`,
+                customerVerify: (customerInfoData as any)?.data?.customer?.code,
+                link: `${process.env.NEXT_PUBLIC_CLIENT_URL}/customer/customer-detail/${(customerInfoData as any)?.data?.id}`,
+              })}
+            >
+              <Button
+                type="submit"
+                variant="secondary"
+                className="w-full my-4"
+                disabled={isLoading}
+              >
+                Müşteri ile dosyayı paylaş
+              </Button>
+            </Link>
+          )}
+
         {customerInfoData &&
           session &&
           session.user &&
