@@ -22,7 +22,10 @@ const CustomerLayout = ({ children }: LayoutProps) => {
         <Button variant="ghost" className="p-0" onClick={handlePreviousPage}>
           <IoArrowBackCircle className="h-7 w-7" />
         </Button>
-        <h1 className="font-extrabold text-blue-500">Suvaroglu</h1>
+        <div className="flex items-center gap-x-3">
+          <h1 className="font-extrabold text-blue-500">Suvaroglu</h1>
+          <img src="/icons.png" width={50} />
+        </div>
       </div>
       {children}
     </div>

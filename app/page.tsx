@@ -55,7 +55,10 @@ export default function Home() {
           Çıkış Yap
         </Button>
         <div className="flex flex-col h-full my-5 mx-3">
-          <h2 className="font-extrabold text-xl text-blue-500">Suvaroglu</h2>
+          <div className="flex items-center gap-x-3">
+            <img src="/icons.png" width={50} />
+            <h2 className="font-bold text-xl text-blue-500">Suvaroglu</h2>
+          </div>
           <CustomerActions />
         </div>
 
