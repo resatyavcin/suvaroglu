@@ -54,22 +54,23 @@ const FolderPage = () => {
       for (var x = 0; x < values.file.length; x++) {
         const originalFileName = values.file[x].name;
         const originalFileType = values.file[x].type;
+        form_data.append('file[]', values.file[x]);
 
-        if (originalFileType !== 'application/pdf') {
-          const compressedFile = await imageCompression(
-            values.file[x],
-            options
-          );
+        // if (originalFileType !== 'application/pdf') {
+        //   const compressedFile = await imageCompression(
+        //     values.file[x],
+        //     options
+        //   );
 
-          const renamedFile = new File([compressedFile], originalFileName, {
-            type: compressedFile.type,
-            lastModified: compressedFile.lastModified,
-          });
+        //   const renamedFile = new File([compressedFile], originalFileName, {
+        //     type: compressedFile.type,
+        //     lastModified: compressedFile.lastModified,
+        //   });
 
-          form_data.append('file[]', renamedFile);
-        } else {
-          form_data.append('file[]', values.file[x]);
-        }
+        //   form_data.append('file[]', renamedFile);
+        // } else {
+        //   form_data.append('file[]', values.file[x]);
+        // }
       }
 
       const data = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/file`, {
