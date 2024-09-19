@@ -41,7 +41,7 @@ const FolderPage = () => {
       const form_data = new FormData();
 
       const options = {
-        maxSizeMB: 0.1,
+        maxSizeMB: 0.25,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       };
