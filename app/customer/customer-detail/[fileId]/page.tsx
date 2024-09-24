@@ -179,7 +179,7 @@ const CustomerFile = () => {
               {customerInfoData?.data?.customer?.customerVehicle +
                 ' • ' +
                 Intl.NumberFormat('tr-TR', {
-                  maximumSignificantDigits: 3,
+                  useGrouping: true,
                 }).format(
                   customerInfoData?.data?.customer?.customerVehicleKM || 0
                 ) +
