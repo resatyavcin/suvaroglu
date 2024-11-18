@@ -17,7 +17,7 @@ export const listFolders = async ({
   try {
     const paramsWithExclusiveStartKey: {
       TableName: string;
-      Limit: number;
+      Limit?: number;
       FilterExpression?: string;
       ExpressionAttributeValues?: ExpressionAttributeValues;
       ScanIndexForward?: boolean;
@@ -25,8 +25,6 @@ export const listFolders = async ({
     } = {
       TableName: 'customer',
       ScanIndexForward: false,
-      IndexName: 'customerDate-index',
-      Limit: 30,
     };
 
     // Initialize values
@@ -64,7 +62,7 @@ export const listFolders = async ({
       new ScanCommand(paramsWithExclusiveStartKey)
     );
 
-    const processedData: any = (dynamoReturnData.Items || []).map((item) => ({
+    const processedData: any[] = (dynamoReturnData.Items || []).map((item) => ({
       customerName: item.customerName.S,
       customerVehicle: item.customerVehicle.S,
       customerSurname: item.customerSurname.S,
@@ -81,18 +79,19 @@ export const listFolders = async ({
       return dateB - dateA;
     });
 
-    console.log(processedData);
-
-    return (processedData || []).map((content: any) => {
-      return {
-        nextMarker: (dynamoReturnData?.LastEvaluatedKey as any)?.customerId?.S,
-        id: content.customerId,
-        phone: content.customerPhone,
-        header: content.customerName + ' ' + content.customerSurname,
-        description:
-          content.customerVehicle + ' • ' + content.customerVehicleKM,
-      };
-    });
+    return (processedData || [])
+      .map((content: any) => {
+        return {
+          nextMarker: (dynamoReturnData?.LastEvaluatedKey as any)?.customerId
+            ?.S,
+          id: content.customerId,
+          phone: content.customerPhone,
+          header: content.customerName + ' ' + content.customerSurname,
+          description:
+            content.customerVehicle + ' • ' + content.customerVehicleKM,
+        };
+      })
+      .slice(0, 30);
   } catch (err) {
     return err;
   }
