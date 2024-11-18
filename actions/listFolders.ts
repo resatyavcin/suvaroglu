@@ -24,6 +24,8 @@ export const listFolders = async ({
       IndexName?: string;
     } = {
       TableName: 'customer',
+      ScanIndexForward: false,
+      IndexName: 'customerDate-index',
       Limit: 30,
     };
 
@@ -78,6 +80,8 @@ export const listFolders = async ({
       const dateB = new Date(b.customerDate).getTime();
       return dateB - dateA;
     });
+
+    console.log(processedData);
 
     return (processedData || []).map((content: any) => {
       return {
